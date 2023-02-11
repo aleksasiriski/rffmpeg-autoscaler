@@ -1,5 +1,6 @@
 Jellyfin:
   Host: thisisatest
+  SshKey:
   Jobs:
 Hetzner:
   Token: thisisatest

@@ -8,6 +8,7 @@ import (
 
 type Jellyfin struct {
     Host	string 	`mapstructure:"HOST"`
+	SshKey	string 	`mapstructure:"SSH_KEY"`
     Jobs	int 	`mapstructure:"JOBS"`
 }
 
@@ -47,6 +48,7 @@ type Config struct {
 func LoadConfig(path string) (config Config, err error) {
 	config = Config{
 		Jellyfin: Jellyfin{
+			SshKey: "/config/rffmpeg/.ssh/id_ed25519.pub"
 			Jobs: 2,
 		},
 		Hetzner: Hetzner{
@@ -61,7 +63,7 @@ func LoadConfig(path string) (config Config, err error) {
 		},
 		Database: Database{
 			Type: "sqlite",
-			Host: "localnost",
+			Host: "localhost",
 			Port: 5432,
 			Name: "rffmpeg-autoscaler",
 			Username: "postgres",
@@ -88,6 +90,8 @@ func LoadConfig(path string) (config Config, err error) {
 		panic(fmt.Errorf("Jellyfin host is not specified!"))
 	} else if config.Hetzner.Token == "" {
 		panic(fmt.Errorf("Hetzner token is not specified!"))
+	} else if config.Database.Type != "sqlite" && config.Database.Type != "postgres" {
+		panic(fmt.Errorf("Database type must be sqlite or postgres!"))
 	}
 	config.Hetzner.CloudInit = fmt.Sprintf(config.Hetzner.CloudInit, config.Jellyfin.Host, config.Media.Username, config.Media.Password)
 

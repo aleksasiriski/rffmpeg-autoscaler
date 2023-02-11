@@ -48,7 +48,7 @@ type Config struct {
 func LoadConfig(path string) (config Config, err error) {
 	config = Config{
 		Jellyfin: Jellyfin{
-			SshKey: "/config/rffmpeg/.ssh/id_ed25519.pub"
+			SshKey: "/config/rffmpeg/.ssh/id_ed25519.pub",
 			Jobs: 2,
 		},
 		Hetzner: Hetzner{

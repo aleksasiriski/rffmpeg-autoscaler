@@ -88,9 +88,11 @@ func LoadConfig(path string) (config Config, err error) {
 
 	if config.Jellyfin.Host == "" {
 		panic(fmt.Errorf("Jellyfin host is not specified!"))
-	} else if config.Hetzner.Token == "" {
+	}
+	if config.Hetzner.Token == "" {
 		panic(fmt.Errorf("Hetzner token is not specified!"))
-	} else if config.Database.Type != "sqlite" && config.Database.Type != "postgres" {
+	}
+	if config.Database.Type != "sqlite" && config.Database.Type != "postgres" {
 		panic(fmt.Errorf("Database type must be sqlite or postgres!"))
 	}
 	config.Hetzner.CloudInit = fmt.Sprintf(config.Hetzner.CloudInit, config.Jellyfin.Host, config.Media.Username, config.Media.Password)

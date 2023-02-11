@@ -29,9 +29,9 @@ I made and tested these images to use with this script:
 
 | Name			| Default value		| Description		|
 | :----------: | :--------------: | :--------------- | 
-| STATE_DIR | /config | Path to rffmpeg config |
-| LOG_FILE | STATE_DIR + /log/hcloud-rffmpeg.log | Path to log file |
-| DB_PATH | STATE_DIR + /rffmpeg/rffmpeg.db | Path to SQLite database file used by rffmpeg script |
+| RFFMPEG_AUTOSCALER_CONFIG | /config | Path to rffmpeg config |
+| RFFMPEG_AUTOSCALER_LOG | /config/log/rffmpeg-autoscaler.log | Path to log file |
+| RFFMPEG_AUTOSCALER_VERBOSITY | 0 | 1 means DEBUG, 2 means TRACE |
 | JELLYFIN_HOST | Must be explicitly set! | The IP address or hostname of Jellyfin's NFS share that workers use to access transcodes and subtitles directories |
 | JELLYFIN_SSH_KEY | /config/rffmpeg/.ssh/id_ed25519.pub | Path to rffmpeg public ssh key generated on the Jellyfin host |
 | JELLYFIN_JOBS | 2 | Number of jobs allowed per worker, the default of 2 tells the script to only create a new worker if there are 2 or more jobs on the previous one. |

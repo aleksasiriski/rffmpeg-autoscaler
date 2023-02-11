@@ -65,7 +65,7 @@ func LoadConfig(path string) (config Config, err error) {
 			Type: "sqlite",
 			Host: "localhost",
 			Port: 5432,
-			Name: "rffmpeg-autoscaler",
+			Name: "rffmpeg",
 			Username: "postgres",
 		},
 	}

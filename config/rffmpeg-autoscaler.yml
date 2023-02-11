@@ -1,0 +1,23 @@
+Jellyfin:
+  Host: thisisatest
+  Jobs:
+Hetzner:
+  Token: thisisatest
+  Server:
+  Image:
+  SshKey:
+  Network:
+  Firewall:
+  PlacementGroup:
+  Location:
+  CloudInit:
+Database:
+  Type:
+  Host:
+  Port:
+  Name:
+  Username:
+  Password:
+Media:
+  Username:
+  Password:

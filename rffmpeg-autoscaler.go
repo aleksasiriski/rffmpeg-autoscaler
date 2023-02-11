@@ -74,7 +74,9 @@ func main() {
 	// config
 	config, err := LoadConfig(cli.Config)
     if err != nil {
-        log.Fatal("Cannot load config:", err)
+		log.Fatal().
+			Err(err).
+			Msg("Cannot load config:")
     }
 
 	// datastore
@@ -130,6 +132,6 @@ func main() {
 
 	// display initialised banner
 	log.Info().
-		Str("verbosity", fmt.Sprintf("%d", cli.Verbosity)).
+		Str("Config", fmt.Sprintf("%s", config)).
 		Msg("Initialised")
 }

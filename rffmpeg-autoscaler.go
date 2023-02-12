@@ -107,7 +107,6 @@ func main() {
 		DbType:     config.Database.Type,
 		Mg:         mg,
 	})
-
 	if err != nil {
 		log.Fatal().
 			Err(err).
@@ -119,27 +118,4 @@ func main() {
 		Str("Migrate", fmt.Sprintf("%s", mg)).
 		Str("Procerssor", fmt.Sprintf("%s", proc)).
 		Msg("Initialised")
-
-	/*log.Info().
-		Int("manual", 1).
-		Int("bernard", len(c.Triggers.Bernard)).
-		Int("inotify", len(c.Triggers.Inotify)).
-		Int("lidarr", len(c.Triggers.Lidarr)).
-		Int("radarr", len(c.Triggers.Radarr)).
-		Int("readarr", len(c.Triggers.Readarr)).
-		Int("sonarr", len(c.Triggers.Sonarr)).
-		Msg("Initialised triggers")*/
-
-	/*for _, t := range c.Targets.Jellyfin {
-		tp, err := jellyfin.New(t)
-		if err != nil {
-			log.Fatal().
-				Err(err).
-				Str("target", "jellyfin").
-				Str("target_url", t.URL).
-				Msg("Failed initialising target")
-		}
-
-		targets = append(targets, tp)
-	}*/
 }

@@ -121,19 +121,19 @@ func LoadConfig(path string) (config Config, err error) {
 	}
 	config.Jellyfin.SshKey = sshkeypath
 	config.Database.Path = dbpath
-	if err := os.MkdirAll(filepath.Dir(config.Database.Path), os.ModePerm); err != nil {
-		log.Fatal().
-			Err(err).
-			Msg("Failed creating database directory:")
-    }
 
 	switch config.Database.Type {
 		case "sqlite": {
 			config.Database.MigratorDir = "migrations/sqlite"
+			if err := os.MkdirAll(filepath.Dir(config.Database.Path), os.ModePerm); err != nil {
+				log.Fatal().
+					Err(err).
+					Msg("Failed creating database directory:")
+			}
 		}
 		case "postgres": {
-			config.Database.Path = fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", config.Database.Host, config.Database.Port, config.Database.Username, config.Database.Password, config.Database.Name)
 			config.Database.MigratorDir = "migrations/postgres"
+			config.Database.Path = fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", config.Database.Host, config.Database.Port, config.Database.Username, config.Database.Password, config.Database.Name)
 		}
 	}
 	config.Hetzner.CloudInit = fmt.Sprintf(config.Hetzner.CloudInit, config.Jellyfin.Host, config.Media.Username, config.Media.Password)

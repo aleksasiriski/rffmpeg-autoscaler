@@ -2,14 +2,8 @@ package processor
 
 import (
 	"database/sql"
-	//"fmt"
-	//"os"
-	//"sync/atomic"
-	//"time"
 
 	"github.com/aleksasiriski/rffmpeg-autoscaler/migrate"
-
-	//"golang.org/x/sync/errgroup"
 )
 
 type Config struct {
@@ -35,65 +29,30 @@ type Processor struct {
 	processed  int64
 }
 
-/*func (p *Processor) Add(scans ...Host) error {
-	return p.store.Upsert(scans)
+func (p *Processor) AddHosts(hosts ...Host) error {
+	return p.store.UpsertHosts(hosts)
 }
 
-// ScansRemaining returns the amount of scans remaining
-func (p *Processor) ScansRemaining() (int, error) {
-	return p.store.GetScansRemaining()
+func (p *Processor) RemoveHost(host Host) error {
+	return p.store.DeleteHost(host)
 }
 
-// ScansProcessed returns the amount of scans processed
-func (p *Processor) ScansProcessed() int64 {
-	return atomic.LoadInt64(&p.processed)
+func (p *Processor) NumberOfHosts(host Host) (int, error) {
+	return p.store.GetHostsRemaining()
 }
 
-// CheckAvailability checks whether all targets are available.
-// If one target is not available, the error will return.
-func (p *Processor) CheckAvailability(targets []autoscan.Target) error {
-	g := new(errgroup.Group)
-
-	for _, target := range targets {
-		target := target
-		g.Go(func() error {
-			return target.Available()
-		})
-	}
-
-	return g.Wait()
+func (p *Processor) GetAllHosts() ([]Host, error) {
+	return p.store.GetHosts()
 }
 
-func (p *Processor) callTargets(targets []autoscan.Target, scan autoscan.Scan) error {
-	g := new(errgroup.Group)
-
-	for _, target := range targets {
-		target := target
-		g.Go(func() error {
-			return target.Scan(scan)
-		})
-	}
-
-	return g.Wait()
+func (p *Processor) GetAllProcesses() ([]Process, error) {
+	return p.store.GetProcesses()
 }
 
-func (p *Processor) Process(targets []autoscan.Target) error {
-	scan, err := p.store.GetAvailableScan(p.minimumAge)
-	if err != nil {
-		return err
-	}
+func (p *Processor) GetAllProcessesFromHost(host Host) ([]Process, error) {
+	return p.store.GetProcessesWhere(host)
+}
 
-	// Fatal or Target Unavailable -> return original error
-	err = p.callTargets(targets, scan)
-	if err != nil {
-		return err
-	}
-
-	err = p.store.Delete(scan)
-	if err != nil {
-		return err
-	}
-
-	atomic.AddInt64(&p.processed, 1)
-	return nil
-}*/
+func (p *Processor) GetAllStatesFromHost(host Host) ([]State, error) {
+	return p.store.GetStatesWhere(host)
+}

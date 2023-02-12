@@ -100,7 +100,7 @@ func (store *datastore) upsertHost(tx *sql.Tx, dbType string, host Host) error {
 	return err
 }
 
-func (store *datastore) UpsertHost(hosts []Host) error {
+func (store *datastore) UpsertHosts(hosts []Host) error {
 	tx, err := store.Begin()
 	if err != nil {
 		return err
@@ -211,8 +211,8 @@ func sqlGetProcessesWhere(dbType string) (string) {
 	}
 }
 
-func (store *datastore) GetProcessesWhere(hostId int) (processes []Process, err error) {
-	rows, err := store.Query(sqlGetProcessesWhere(store.DbType), hostId)
+func (store *datastore) GetProcessesWhere(host Host) (processes []Process, err error) {
+	rows, err := store.Query(sqlGetProcessesWhere(store.DbType), host.id)
 	if err != nil {
 		return processes, err
 	}
@@ -242,8 +242,8 @@ func sqlGetStatesWhere(dbType string) (string) {
 	}
 }
 
-func (store *datastore) GetStatesWhere(hostId int) (states []State, err error) {
-	rows, err := store.Query(sqlGetStatesWhere(store.DbType), hostId)
+func (store *datastore) GetStatesWhere(host Host) (states []State, err error) {
+	rows, err := store.Query(sqlGetStatesWhere(store.DbType), host.id)
 	if err != nil {
 		return states, err
 	}

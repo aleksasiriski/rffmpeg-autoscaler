@@ -5,12 +5,11 @@ go 1.19
 require (
 	github.com/alecthomas/kong v0.7.1
 	github.com/lib/pq v1.10.7
-	github.com/natefinch/lumberjack v0.0.0-20230119042236-215739b3bcdc
 	github.com/oriser/regroup v0.0.0-20210730155327-fca8d7531263
 	github.com/rs/zerolog v1.29.0
 	github.com/spf13/viper v1.15.0
-	golang.org/x/sync v0.1.0
-	modernc.org/sqlite v1.20.3
+	gopkg.in/natefinch/lumberjack.v2 v2.2.1
+	modernc.org/sqlite v1.20.4
 )
 
 require (

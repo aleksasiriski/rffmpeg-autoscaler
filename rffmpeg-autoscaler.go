@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/alecthomas/kong"
-	"github.com/natefinch/lumberjack"
+	"gopkg.in/natefinch/lumberjack.v2"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 

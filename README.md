@@ -29,8 +29,8 @@ I made and tested these images to use with this script:
 
 | Name			| Default value		| Description		|
 | :----------: | :--------------: | :--------------- | 
-| RFFMPEG_AUTOSCALER_CONFIG | /config | Path to rffmpeg config |
-| RFFMPEG_AUTOSCALER_LOG | /config/log/rffmpeg-autoscaler.log | Path to log file |
+| RFFMPEG_AUTOSCALER_CONFIG | /config | Path to config dir |
+| RFFMPEG_AUTOSCALER_LOG | /config/log/rffmpeg-autoscaler.log | Path to the log file |
 | RFFMPEG_AUTOSCALER_VERBOSITY | 0 | 1 means DEBUG, 2 means TRACE |
 | JELLYFIN_HOST | Must be explicitly set! | The IP address or hostname of Jellyfin's NFS share that workers use to access transcodes and subtitles directories |
 | JELLYFIN_SSH_KEY | /config/rffmpeg/.ssh/id_ed25519.pub | Path to rffmpeg public ssh key generated on the Jellyfin host |

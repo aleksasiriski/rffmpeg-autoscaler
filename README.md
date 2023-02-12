@@ -43,7 +43,7 @@ I made and tested these images to use with this script:
 | HETZNER_FIREWALL | rffmpeg-workers | The name of the firewall created for workers, recommended to block access to ssh over the internet
 | HETZNER_PLACEMENT_GROUP | rffmpeg-workers | The name of the placement group created to spread the workers over the datacenter |
 | HETZNER_LOCATION | nbg1 | The name of the location in which the workers should be created |
-| HETZNER_CLOUD_INIT | [string](https://github.com/aleksasiriski/rffmpeg-autoscaler/blob/main/config.go#L62) | The string that setups the workers after creation, the default uses my docker compose and inserts needed env variables |
+| HETZNER_CLOUD_INIT | [string](https://github.com/aleksasiriski/rffmpeg-autoscaler/blob/main/config.go#L66) | The string that setups the workers after creation, the default uses my docker compose and inserts needed env variables |
 | DATABASE_TYPE | sqlite | Must be 'sqlite' or 'postgres` |
 | DATABASE_HOST | localhost | Postgres database host |
 | DATABASE_PORT | 5432 | Postgres database port |

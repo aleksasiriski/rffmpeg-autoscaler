@@ -14,5 +14,5 @@
 # Dependency directories (remove the comment below to include it)
 # vendor/
 # config dir and binary
-config/log
+config
 rffmpeg-autoscaler

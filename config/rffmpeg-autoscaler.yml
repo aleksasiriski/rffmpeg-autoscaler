@@ -14,6 +14,8 @@ Hetzner:
   CloudInit:
 Database:
   Type:
+  Path:
+  MigratorDir:
   Host:
   Port:
   Name:

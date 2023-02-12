@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"strings"
+	"os"
+	"path/filepath"
 	"github.com/spf13/viper"
 )
 
@@ -65,7 +67,7 @@ func LoadConfig(path string) (config Config, err error) {
 		},
 		Database: Database{
 			Type: "sqlite",
-			Path: "/config/rffmpeg/rffmpeg.db",
+			Path: "./config/rffmpeg/rffmpeg.db",
 			MigratorDir: "migrations/sqlite",
 			Host: "localhost",
 			Port: 5432,
@@ -99,6 +101,20 @@ func LoadConfig(path string) (config Config, err error) {
 	if config.Database.Type != "sqlite" && config.Database.Type != "postgres" {
 		panic(fmt.Errorf("Database type must be sqlite or postgres!"))
 	}
+
+	sshkeypath, err := filepath.Abs(config.Jellyfin.SshKey)
+	if err != nil {
+		panic(fmt.Errorf("Failed loading ssh key file: %w", err))
+	}
+	dbpath, err := filepath.Abs(config.Database.Path)
+	if err != nil {
+		panic(fmt.Errorf("Failed loading sqlite file: %w", err))
+	}
+	config.Jellyfin.SshKey = sshkeypath
+	config.Database.Path = dbpath
+	if err := os.MkdirAll(filepath.Dir(config.Database.Path), os.ModePerm); err != nil {
+		panic(fmt.Errorf("Failed creating database directory: %w", err))
+    }
 
 	switch config.Database.Type {
 		case "sqlite": {

@@ -100,6 +100,11 @@ func main() {
 			Msg("Failed initialising migrator:")
 	}
 
+	// display initialised banner
+	log.Info().
+		Str("Migrate", fmt.Sprintf("%s", mg)).
+		Msg("Initialised")
+
 	/*log.Info().
 		Int("manual", 1).
 		Int("bernard", len(c.Triggers.Bernard)).
@@ -122,9 +127,4 @@ func main() {
 
 		targets = append(targets, tp)
 	}*/
-
-	// display initialised banner
-	log.Info().
-		Str("DB", fmt.Sprintf("%s", db)).
-		Msg("Initialised")
 }

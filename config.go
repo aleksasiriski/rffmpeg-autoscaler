@@ -86,34 +86,45 @@ func LoadConfig(path string) (config Config, err error) {
 
 	if err := viper.ReadInConfig(); err != nil {
 		if _, ok := err.(viper.ConfigFileNotFoundError); !ok {
-			panic(fmt.Errorf("Failed parsing config: %w", err))
+			log.Fatal().
+				Err(err).
+				Msg("Failed parsing config:")
 		}
 	}
 
 	err = viper.Unmarshal(&config)
 
 	if config.Jellyfin.Host == "" {
-		panic(fmt.Errorf("Jellyfin host is not specified!"))
+		log.Fatal().
+			Msg("Jellyfin host is not specified!")
 	}
 	if config.Hetzner.Token == "" {
-		panic(fmt.Errorf("Hetzner token is not specified!"))
+		log.Fatal().
+			Msg("Hetzner token is not specified!")
 	}
 	if config.Database.Type != "sqlite" && config.Database.Type != "postgres" {
-		panic(fmt.Errorf("Database type must be sqlite or postgres!"))
+		log.Fatal().
+			Msg("Database type must be sqlite or postgres!")
 	}
 
 	sshkeypath, err := filepath.Abs(config.Jellyfin.SshKey)
 	if err != nil {
-		panic(fmt.Errorf("Failed loading ssh key file: %w", err))
+		log.Fatal().
+			Err(err).
+			Msg("Failed loading ssh key file:")
 	}
 	dbpath, err := filepath.Abs(config.Database.Path)
 	if err != nil {
-		panic(fmt.Errorf("Failed loading sqlite file: %w", err))
+		log.Fatal().
+			Err(err).
+			Msg("Failed loading sqlite file:")
 	}
 	config.Jellyfin.SshKey = sshkeypath
 	config.Database.Path = dbpath
 	if err := os.MkdirAll(filepath.Dir(config.Database.Path), os.ModePerm); err != nil {
-		panic(fmt.Errorf("Failed creating database directory: %w", err))
+		log.Fatal().
+			Err(err).
+			Msg("Failed creating database directory:")
     }
 
 	switch config.Database.Type {

@@ -14,6 +14,8 @@ import (
 	"database/sql"
 	_ "modernc.org/sqlite"
 	_ "github.com/lib/pq"
+
+	"github.com/aleksasiriski/rffmpeg-autoscaler/migrate"
 )
 
 var (
@@ -84,20 +86,19 @@ func main() {
 	if err != nil {
 		log.Fatal().
 			Err(err).
-			Msg("Failed opening datastore")
+			Msg("Failed opening datastore:")
 	}
 	if config.Database.Type == "sqlite" {
 		db.SetMaxOpenConns(1)
 	}
 
 	// migrator
-	/*
 	mg, err := migrate.New(db, config.Database.Type, config.Database.MigratorDir)
 	if err != nil {
 		log.Fatal().
 			Err(err).
-			Msg("Failed initialising migrator")
-	}*/
+			Msg("Failed initialising migrator:")
+	}
 
 	/*log.Info().
 		Int("manual", 1).

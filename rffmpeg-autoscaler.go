@@ -39,8 +39,8 @@ func main() {
 			Compact: true,
 		}),
 		kong.Vars{
-			"config_dir":   "./config",
-			"log_file":      "./config/log/rffmpeg-autoscaler.log",
+			"config_dir":	"/config",
+			"log_file":		"/config/log/rffmpeg-autoscaler.log",
 		},
 	)
 

@@ -67,7 +67,7 @@ func LoadConfig(path string) (config Config, err error) {
 		},
 		Database: Database{
 			Type: "sqlite",
-			Path: "./config/rffmpeg/rffmpeg.db",
+			Path: "/config/rffmpeg/rffmpeg.db",
 			MigratorDir: "migrations/sqlite",
 			Host: "localhost",
 			Port: 5432,

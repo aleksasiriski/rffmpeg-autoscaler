@@ -16,6 +16,7 @@ import (
 	_ "github.com/lib/pq"
 
 	"github.com/aleksasiriski/rffmpeg-autoscaler/migrate"
+	"github.com/aleksasiriski/rffmpeg-autoscaler/processor"
 )
 
 var (
@@ -100,9 +101,23 @@ func main() {
 			Msg("Failed initialising migrator:")
 	}
 
+	// processor
+	proc, err := processor.New(processor.Config{
+		Db:         db,
+		DbType:     config.Database.Type,
+		Mg:         mg,
+	})
+
+	if err != nil {
+		log.Fatal().
+			Err(err).
+			Msg("Failed initialising processor")
+	}
+
 	// display initialised banner
 	log.Info().
 		Str("Migrate", fmt.Sprintf("%s", mg)).
+		Str("Procerssor", fmt.Sprintf("%s", proc)).
 		Msg("Initialised")
 
 	/*log.Info().

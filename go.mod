@@ -9,6 +9,7 @@ require (
 	github.com/oriser/regroup v0.0.0-20210730155327-fca8d7531263
 	github.com/rs/zerolog v1.29.0
 	github.com/spf13/viper v1.15.0
+	golang.org/x/sync v0.1.0
 	modernc.org/sqlite v1.20.3
 )
 

@@ -49,8 +49,8 @@ type Config struct {
 	Media		Media		`mapstructure:"MEDIA"`
 }
 
-func LoadConfig(path string) (config Config, err error) {
-	config = Config{
+func LoadConfig(path string) (Config, error) {
+	config := Config{
 		Jellyfin: Jellyfin{
 			SshKey: "/config/rffmpeg/.ssh/id_ed25519.pub",
 			Jobs: 2,
@@ -84,40 +84,31 @@ func LoadConfig(path string) (config Config, err error) {
 	viper.SetEnvKeyReplacer(replacer)
 	viper.AutomaticEnv()
 
-	if err := viper.ReadInConfig(); err != nil {
+	err := viper.ReadInConfig()
+	if err != nil {
 		if _, ok := err.(viper.ConfigFileNotFoundError); !ok {
-			log.Fatal().
-				Err(err).
-				Msg("Failed parsing config:")
+			return config, fmt.Errorf("Failed parsing config: %w", err)
 		}
 	}
-
 	err = viper.Unmarshal(&config)
 
 	if config.Jellyfin.Host == "" {
-		log.Fatal().
-			Msg("Jellyfin host is not specified!")
+		return config, fmt.Errorf("Jellyfin host is not specified!")
 	}
 	if config.Hetzner.Token == "" {
-		log.Fatal().
-			Msg("Hetzner token is not specified!")
+		return config, fmt.Errorf("Hetzner token is not specified!")
 	}
 	if config.Database.Type != "sqlite" && config.Database.Type != "postgres" {
-		log.Fatal().
-			Msg("Database type must be sqlite or postgres!")
+		return config, fmt.Errorf("Database type must be sqlite or postgres!")
 	}
 
 	sshkeypath, err := filepath.Abs(config.Jellyfin.SshKey)
 	if err != nil {
-		log.Fatal().
-			Err(err).
-			Msg("Failed loading ssh key file:")
+		return config, fmt.Errorf("Failed loading ssh key file: %w", err)
 	}
 	dbpath, err := filepath.Abs(config.Database.Path)
 	if err != nil {
-		log.Fatal().
-			Err(err).
-			Msg("Failed loading sqlite file:")
+		return config, fmt.Errorf("Failed loading sqlite file: %w", err)
 	}
 	config.Jellyfin.SshKey = sshkeypath
 	config.Database.Path = dbpath
@@ -125,10 +116,9 @@ func LoadConfig(path string) (config Config, err error) {
 	switch config.Database.Type {
 		case "sqlite": {
 			config.Database.MigratorDir = "migrations/sqlite"
-			if err := os.MkdirAll(filepath.Dir(config.Database.Path), os.ModePerm); err != nil {
-				log.Fatal().
-					Err(err).
-					Msg("Failed creating database directory:")
+			err := os.MkdirAll(filepath.Dir(config.Database.Path), os.ModePerm)
+			if err != nil {
+				return config, fmt.Errorf("Failed creating database directory: %w", err)
 			}
 		}
 		case "postgres": {
@@ -138,5 +128,5 @@ func LoadConfig(path string) (config Config, err error) {
 	}
 	config.Hetzner.CloudInit = fmt.Sprintf(config.Hetzner.CloudInit, config.Jellyfin.Host, config.Media.Username, config.Media.Password)
 
-	return
+	return config, err
 }

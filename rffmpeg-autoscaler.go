@@ -11,7 +11,7 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 
-	_ "database/sql"
+	"database/sql"
 	_ "modernc.org/sqlite"
 	_ "github.com/lib/pq"
 )
@@ -80,27 +80,19 @@ func main() {
     }
 
 	// datastore
-	/*dbconn := cli.Database
-	if c.Database.Type == "postgres" {
-		dbconn = fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", c.Database.Host, c.Database.Port, c.Database.Username, c.Database.Password, c.Database.Name)
-	} else if c.Database.Type != "sqlite" {
-		log.Fatal().
-			Msg("Wrong database type")
-	}
-	db, err := sql.Open(c.Database.Type, dbconn)
+	db, err := sql.Open(config.Database.Type, config.Database.Path)
 	if err != nil {
 		log.Fatal().
 			Err(err).
 			Msg("Failed opening datastore")
 	}
-	db.SetMaxOpenConns(1)
+	if config.Database.Type == "sqlite" {
+		db.SetMaxOpenConns(1)
+	}
 
 	// migrator
-	migratorDir := "migrations/sqlite"
-	if c.Database.Type == "postgres" {
-		migratorDir = "migrations/postgres"
-	}
-	mg, err := migrate.New(db, c.Database.Type, migratorDir)
+	/*
+	mg, err := migrate.New(db, config.Database.Type, config.Database.MigratorDir)
 	if err != nil {
 		log.Fatal().
 			Err(err).
@@ -132,6 +124,6 @@ func main() {
 
 	// display initialised banner
 	log.Info().
-		Str("Config", fmt.Sprintf("%s", config)).
+		Str("DB", fmt.Sprintf("%s", db)).
 		Msg("Initialised")
 }

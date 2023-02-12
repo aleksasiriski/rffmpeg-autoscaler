@@ -25,12 +25,14 @@ type Hetzner struct {
 }
 
 type Database struct {
-	Type		string	`mapstructure:"type"`
-	Host		string	`mapstructure:"host"`
-	Port		int		`mapstructure:"port"`
-	Name		string	`mapstructure:"name"`
-	Username	string	`mapstructure:"username"`
-	Password	string	`mapstructure:"password"`
+	Type		string	`mapstructure:"TYPE"`
+	Path		string	`mapstructure:"PATH"`
+	MigratorDir	string	`mapstructure:"MIGRATOR_DIR"`
+	Host		string	`mapstructure:"HOST"`
+	Port		int		`mapstructure:"PORT"`
+	Name		string	`mapstructure:"NAME"`
+	Username	string	`mapstructure:"USERNAME"`
+	Password	string	`mapstructure:"PASSWORD"`
 }
 
 type Media struct {
@@ -63,6 +65,8 @@ func LoadConfig(path string) (config Config, err error) {
 		},
 		Database: Database{
 			Type: "sqlite",
+			Path: "/config/rffmpeg/rffmpeg.db",
+			MigratorDir: "migrations/sqlite",
 			Host: "localhost",
 			Port: 5432,
 			Name: "rffmpeg",
@@ -94,6 +98,16 @@ func LoadConfig(path string) (config Config, err error) {
 	}
 	if config.Database.Type != "sqlite" && config.Database.Type != "postgres" {
 		panic(fmt.Errorf("Database type must be sqlite or postgres!"))
+	}
+
+	switch config.Database.Type {
+		case "sqlite": {
+			config.Database.MigratorDir = "migrations/sqlite"
+		}
+		case "postgres": {
+			config.Database.Path = fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", config.Database.Host, config.Database.Port, config.Database.Username, config.Database.Password, config.Database.Name)
+			config.Database.MigratorDir = "migrations/postgres"
+		}
 	}
 	config.Hetzner.CloudInit = fmt.Sprintf(config.Hetzner.CloudInit, config.Jellyfin.Host, config.Media.Username, config.Media.Password)
 

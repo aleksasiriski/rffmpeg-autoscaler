@@ -1,16 +1,17 @@
 package processor
 
 import (
-	"database/sql"
+	
 	"embed"
 	"errors"
 	"fmt"
 	"time"
 
-	"github.com/aleksasiriski/rffmpeg-autoscaler/migrate"
-
+	"database/sql"
 	_ "modernc.org/sqlite"
 	_ "github.com/lib/pq"
+
+	"github.com/aleksasiriski/rffmpeg-autoscaler/migrate"
 )
 
 type datastore struct {

@@ -1,14 +1,15 @@
 package migrate
 
 import (
-	"database/sql"
 	"embed"
 	"errors"
 	"fmt"
 
-	"github.com/oriser/regroup"
+	"database/sql"
 	"modernc.org/sqlite"
 	"github.com/lib/pq"
+
+	"github.com/oriser/regroup"
 )
 
 type Migrator struct {

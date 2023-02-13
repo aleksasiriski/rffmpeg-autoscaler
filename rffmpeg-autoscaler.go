@@ -9,15 +9,15 @@ import (
 	"time"
 	"strings"
 
-	"github.com/alecthomas/kong"
-	"gopkg.in/natefinch/lumberjack.v2"
-	"github.com/rs/zerolog"
-	"github.com/rs/zerolog/log"
-	"github.com/sourcegraph/conc"
-
 	"database/sql"
 	_ "modernc.org/sqlite"
 	_ "github.com/lib/pq"
+
+	"gopkg.in/natefinch/lumberjack.v2"
+	"github.com/alecthomas/kong"
+	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
+	"github.com/sourcegraph/conc"
 
 	"github.com/hetznercloud/hcloud-go/hcloud"
 	"github.com/aleksasiriski/rffmpeg-autoscaler/migrate"

@@ -1,8 +1,8 @@
 package processor
 
 import (
-	"database/sql"
 	"time"
+	"database/sql"
 
 	"github.com/aleksasiriski/rffmpeg-autoscaler/migrate"
 )

@@ -1,11 +1,11 @@
 package migrate
 
 import (
-	"database/sql"
 	"embed"
 	"fmt"
-	"path/filepath"
 	"sort"
+	"path/filepath"
+	"database/sql"
 )
 
 type migration struct {

@@ -8,6 +8,7 @@ import (
 	"syscall"
 	"time"
 	"strings"
+	"context"
 
 	"database/sql"
 	_ "modernc.org/sqlite"
@@ -162,7 +163,7 @@ func CheckProcessesAndRescale(config Config, proc *processor.Processor, client *
 				Msg("Failed getting the current number of hosts:")
 		} else {
 			if numberOfHosts == 0 {
-				log.Debug().
+				log.Info().
 					Msg("No workers found. Checking if there are any transcodes on fallback.")
 				transcodes := 0
 				numberOfProcesses, err := proc.NumberOfProcesses()
@@ -172,7 +173,7 @@ func CheckProcessesAndRescale(config Config, proc *processor.Processor, client *
 						Msg("Failed getting the current number of processes:")
 				} else {
 					if numberOfProcesses == 0 {
-						log.Debug().
+						log.Info().
 							Msg("Found no processes on fallback.")
 					} else {
 						processes, err := proc.GetAllProcesses()
@@ -191,14 +192,14 @@ func CheckProcessesAndRescale(config Config, proc *processor.Processor, client *
 									Msg(fmt.Sprintf("Found %d transcodes on fallback.", transcodes))
 								//! createServer
 							} else {
-								log.Debug().
+								log.Info().
 									Msg("Found no transcodes on fallback.")
 							}
 						}
 					}
 				}
 			} else {
-				log.Debug().
+				log.Info().
 					Msg("Workers found. Checking if there are any workers with room.")
 				workers_with_room := 0
 				hosts, err := proc.GetAllHosts()
@@ -216,7 +217,7 @@ func CheckProcessesAndRescale(config Config, proc *processor.Processor, client *
 								Msg(fmt.Sprintf("Failed getting the current number of processes for host %s:", host.Servername))
 						} else {
 							if numberOfProcesses == 0 {
-								log.Debug().
+								log.Info().
 									Msg(fmt.Sprintf("Found no processes on host %s.", host.Servername))
 							} else {
 								processes, err := proc.GetAllProcessesFromHost(host)
@@ -231,11 +232,11 @@ func CheckProcessesAndRescale(config Config, proc *processor.Processor, client *
 										}
 									}
 									if transcodes > config.Jellyfin.Jobs {
-										log.Debug().
+										log.Info().
 											Msg(fmt.Sprintf("Found %d transcodes on host %s.", transcodes, host.Servername))
 										
 									} else {
-										log.Debug().
+										log.Info().
 											Msg(fmt.Sprintf("Found less than %d transcodes on host %s.", config.Jellyfin.Jobs, host.Servername))
 										workers_with_room += 1
 									}	
@@ -256,9 +257,46 @@ func CheckProcessesAndRescale(config Config, proc *processor.Processor, client *
 		}
 
 		*ableToExit = true
+		log.Info().
+			Msg("Sleeping for 5 minutes until next check.")
 		time.Sleep(time.Minute * 5)
     }
 
 	log.Info().
 		Msg("Finished checking for processes and rescaling")
+}
+
+func createServer(config Config, proc *processor.Processor, client *hcloud.Client, needToExit *bool, ableToExit *bool) error {
+	ctx := context.Background()
+	
+	//! name := generateName()
+	serverType, _, err := client.ServerType.GetByName(ctx, config.Hetzner.Server)
+	image, _, err := client.Image.GetByName(ctx, config.Hetzner.Image)
+	sshKey, _, err := client.SSHKey.GetByName(ctx, config.Hetzner.SshKey)
+	location, _, err := client.Location.GetByName(ctx, config.Hetzner.Location)
+	network, _, err := client.Network.GetByName(ctx, config.Hetzner.Network)
+	//firewall, _, err := client.Firewall.GetByName(ctx, config.Hetzner.Firewall)
+	placementGroup, _, err := client.PlacementGroup.GetByName(ctx, config.Hetzner.PlacementGroup)
+
+	sshKeys := []*hcloud.SSHKey{sshKey}
+	networks := []*hcloud.Network{network}
+	/*firewalls := []*hcloud.ServerCreateFirewall{*hcloud.ServerCreateFirewall{
+		Firewall: *firewall,
+	}}*/
+
+	server, _, err := client.Server.Create(ctx, hcloud.ServerCreateOpts{
+		//! Name: name,
+		ServerType: serverType,
+		Image: image,
+		SSHKeys: sshKeys,
+		Location: location,
+		UserData: config.Hetzner.CloudInit,
+		Networks: networks,
+		//!Firewalls: firewalls,
+		PlacementGroup: placementGroup,
+	})
+
+	fmt.Printf("%s", server)
+
+	return err
 }

@@ -120,6 +120,7 @@ func LoadConfig(path string) (Config, error) {
 			if err != nil {
 				return config, fmt.Errorf("Failed creating database directory: %w", err)
 			}
+			config.Database.Path = config.Database.Path + "?_foreign_keys=on"
 		}
 		case "postgres": {
 			config.Database.MigratorDir = "migrations/postgres"

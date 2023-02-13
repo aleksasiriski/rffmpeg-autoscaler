@@ -18,28 +18,6 @@ type datastore struct {
 	DbType string
 }
 
-type Host struct {
-	id int
-	servername string
-	hostname string
-	weight int
-	created time.Time
-}
-
-type Process struct {
-	id int
-	host_id int
-	process_id int
-	cmd string
-}
-
-type State struct {
-	id int
-	host_id int
-	process_id int
-	state string
-}
-
 var now = time.Now
 
 var (
@@ -139,7 +117,7 @@ func (store *datastore) DeleteHost(host Host) error {
 	return nil
 }
 
-const sqlGetHostsRemaining = `SELECT COUNT(servername) FROM hosts`
+const sqlGetHostsRemaining = `SELECT COUNT(id) FROM hosts`
 
 func (store *datastore) GetHostsRemaining() (int, error) {
 	row := store.QueryRow(sqlGetHostsRemaining)
@@ -176,6 +154,23 @@ func (store *datastore) GetHosts() (hosts []Host, err error) {
 	}
 
 	return hosts, rows.Err()
+}
+
+const sqlGetProcessesRemaining = `SELECT COUNT(id) FROM processes`
+
+func (store *datastore) GetProcessesRemaining() (int, error) {
+	row := store.QueryRow(sqlGetProcessesRemaining)
+
+	remaining := 0
+	err := row.Scan(&remaining)
+	switch {
+	case errors.Is(err, sql.ErrNoRows):
+		return remaining, nil
+	case err != nil:
+		return remaining, fmt.Errorf("get remaining processes: %w", err)
+	}
+
+	return remaining, nil
 }
 
 const sqlGetProcesses = `SELECT * FROM processes`

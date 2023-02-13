@@ -2,6 +2,7 @@ package processor
 
 import (
 	"database/sql"
+	"time"
 
 	"github.com/aleksasiriski/rffmpeg-autoscaler/migrate"
 )
@@ -10,6 +11,28 @@ type Config struct {
 	Db *sql.DB
 	DbType string
 	Mg *migrate.Migrator
+}
+
+type Host struct {
+	id int
+	servername string
+	hostname string
+	weight int
+	created time.Time
+}
+
+type Process struct {
+	id int
+	host_id int
+	process_id int
+	cmd string
+}
+
+type State struct {
+	id int
+	host_id int
+	process_id int
+	state string
 }
 
 func New(config Config) (*Processor, error) {
@@ -37,12 +60,16 @@ func (p *Processor) RemoveHost(host Host) error {
 	return p.store.DeleteHost(host)
 }
 
-func (p *Processor) NumberOfHosts(host Host) (int, error) {
+func (p *Processor) NumberOfHosts() (int, error) {
 	return p.store.GetHostsRemaining()
 }
 
 func (p *Processor) GetAllHosts() ([]Host, error) {
 	return p.store.GetHosts()
+}
+
+func (p *Processor) NumberOfProcesses() (int, error) {
+	return p.store.GetProcessesRemaining()
 }
 
 func (p *Processor) GetAllProcesses() ([]Process, error) {

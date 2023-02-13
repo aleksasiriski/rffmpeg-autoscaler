@@ -4,17 +4,22 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"os/signal"
+	"syscall"
 	"time"
+	//"strings"
 
 	"github.com/alecthomas/kong"
 	"gopkg.in/natefinch/lumberjack.v2"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
+	"github.com/sourcegraph/conc"
 
 	"database/sql"
 	_ "modernc.org/sqlite"
 	_ "github.com/lib/pq"
 
+	"github.com/hetznercloud/hcloud-go/hcloud"
 	"github.com/aleksasiriski/rffmpeg-autoscaler/migrate"
 	"github.com/aleksasiriski/rffmpeg-autoscaler/processor"
 )
@@ -110,12 +115,88 @@ func main() {
 	if err != nil {
 		log.Fatal().
 			Err(err).
-			Msg("Failed initialising processor")
+			Msg("Failed initialising processor:")
 	}
+
+	// hetzner
+	client := hcloud.NewClient(hcloud.WithToken(config.Hetzner.Token))
 
 	// display initialised banner
 	log.Info().
-		Str("Migrate", fmt.Sprintf("%s", mg)).
-		Str("Procerssor", fmt.Sprintf("%s", proc)).
+		Str("Migrator", fmt.Sprintf("success")).
+		Str("Processor", fmt.Sprintf("success")).
+		Str("Hcloud", fmt.Sprintf("success")).
 		Msg("Initialised")
+
+	// rffmpeg-autoscaler
+	exit := false
+	var wg conc.WaitGroup
+	wg.Go(func () {
+		CheckProcessesAndRescale(config, proc, client, &exit)
+	})
+
+	// handle interrupt signal
+	quitChannel := make(chan os.Signal, 1)
+    signal.Notify(quitChannel, syscall.SIGINT, syscall.SIGTERM)
+	
+	// cleanup on interrupt signal
+	<-quitChannel
+	exit = true
+	wg.Wait()
+}
+
+func CheckProcessesAndRescale(config Config, proc *processor.Processor, client *hcloud.Client, exit *bool) {
+    log.Info().
+		Msg("Started checking for processes and rescaling")
+	for !*exit {
+		numberOfHosts, err := proc.NumberOfHosts()
+		if err != nil {
+			log.Error().
+				Err(err).
+				Msg("Failed getting the current number of hosts:")
+		} else {
+			if numberOfHosts == 0 {
+				log.Debug().
+					Msg("No workers found. Checking if there are any transcodes on fallback.")
+				transcodes := 0
+				numberOfProcesses, err := proc.NumberOfProcesses()
+				if err != nil {
+					log.Error().
+						Err(err).
+						Msg("Failed getting the current number of processes:")
+				} else {
+					if numberOfProcesses == 0 {
+						log.Debug().
+							Msg("Found no processes on fallback.")
+					} else {
+						processes, err := proc.GetAllProcesses()
+						if err != nil {
+							log.Error().
+								Err(err).
+								Msg("Failed getting all processes:")
+						} else {
+							for _, process := range processes {
+								/*if strings.Contains(process.cmd, "transcode") {
+									transcodes += 1
+								}*/
+								fmt.Printf(fmt.Sprintf("%s", process))
+							}
+							if transcodes > 0 {
+								log.Info().
+									Msg(fmt.Sprintf("Found %d transcodes on fallback.", transcodes))
+								//createServer
+							} else {
+								log.Debug().
+									Msg("Found no transcodes on fallback.")
+							}
+								
+						}
+					}
+				}
+			}
+		}
+		time.Sleep(time.Second * 5) // Should be Minute
+    }
+	log.Info().
+		Msg("Finished checking for processes and rescaling")
 }

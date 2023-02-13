@@ -1,15 +1,14 @@
 package processor
 
 import (
-	
 	"embed"
 	"errors"
 	"fmt"
 	"time"
 
 	"database/sql"
-	_ "modernc.org/sqlite"
 	_ "github.com/lib/pq"
+	_ "modernc.org/sqlite"
 
 	"github.com/aleksasiriski/rffmpeg-autoscaler/migrate"
 )
@@ -33,25 +32,27 @@ var (
 
 func newDatastore(db *sql.DB, dbType string, mg *migrate.Migrator) (*datastore, error) {
 	switch dbType {
-	case "sqlite": {
-		// migrations/sqlite
-		if err := mg.Migrate(&migrationsSqlite, "processor"); err != nil {
-			return nil, fmt.Errorf("migrate: %w", err)
+	case "sqlite":
+		{
+			// migrations/sqlite
+			if err := mg.Migrate(&migrationsSqlite, "processor"); err != nil {
+				return nil, fmt.Errorf("migrate: %w", err)
+			}
 		}
-	}
-	case "postgres": {
-		// migrations/postgres
-		if err := mg.Migrate(&migrationsPostgres, "processor"); err != nil {
-			return nil, fmt.Errorf("migrate: %w", err)
+	case "postgres":
+		{
+			// migrations/postgres
+			if err := mg.Migrate(&migrationsPostgres, "processor"); err != nil {
+				return nil, fmt.Errorf("migrate: %w", err)
+			}
 		}
-	}
 	default:
 		panic(fmt.Errorf("Incorrect database type!"))
 	}
 	return &datastore{db, dbType}, nil
 }
 
-func sqlUpsertHost(dbType string) (string) {
+func sqlUpsertHost(dbType string) string {
 	switch dbType {
 	case "sqlite":
 		return `INSERT INTO hosts (servername, hostname, weight, created)
@@ -98,7 +99,7 @@ func (store *datastore) UpsertHosts(hosts []Host) error {
 	return tx.Commit()
 }
 
-func sqlDeleteHost(dbType string) (string) {
+func sqlDeleteHost(dbType string) string {
 	switch dbType {
 	case "sqlite":
 		return `DELETE FROM hosts WHERE servername=?`
@@ -174,7 +175,7 @@ func (store *datastore) GetProcessesRemaining() (int, error) {
 	return remaining, nil
 }
 
-func sqlGetProcessesRemainingWhere(dbType string) (string) {
+func sqlGetProcessesRemainingWhere(dbType string) string {
 	switch dbType {
 	case "sqlite":
 		return `SELECT COUNT(id) FROM processes WHERE host_id=?`
@@ -222,7 +223,7 @@ func (store *datastore) GetProcesses() (processes []Process, err error) {
 	return processes, rows.Err()
 }
 
-func sqlGetProcessesWhere(dbType string) (string) {
+func sqlGetProcessesWhere(dbType string) string {
 	switch dbType {
 	case "sqlite":
 		return `SELECT * FROM processes WHERE host_id=?`
@@ -253,7 +254,7 @@ func (store *datastore) GetProcessesWhere(host Host) (processes []Process, err e
 	return processes, rows.Err()
 }
 
-func sqlGetStatesWhere(dbType string) (string) {
+func sqlGetStatesWhere(dbType string) string {
 	switch dbType {
 	case "sqlite":
 		return `SELECT * FROM states WHERE host_id=?`

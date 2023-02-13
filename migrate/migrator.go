@@ -6,8 +6,8 @@ import (
 	"fmt"
 
 	"database/sql"
-	"modernc.org/sqlite"
 	"github.com/lib/pq"
+	"modernc.org/sqlite"
 
 	"github.com/oriser/regroup"
 )

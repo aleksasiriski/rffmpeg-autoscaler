@@ -1,38 +1,38 @@
 package processor
 
 import (
-	"time"
 	"database/sql"
+	"time"
 
 	"github.com/aleksasiriski/rffmpeg-autoscaler/migrate"
 )
 
 type Config struct {
-	Db *sql.DB
+	Db     *sql.DB
 	DbType string
-	Mg *migrate.Migrator
+	Mg     *migrate.Migrator
 }
 
 type Host struct {
-	Id int
+	Id         int
 	Servername string
-	Hostname string
-	Weight int
-	Created time.Time
+	Hostname   string
+	Weight     int
+	Created    time.Time
 }
 
 type Process struct {
-	Id int
-	Host_id int
+	Id         int
+	Host_id    int
 	Process_id int
-	Cmd string
+	Cmd        string
 }
 
 type State struct {
-	Id int
-	Host_id int
+	Id         int
+	Host_id    int
 	Process_id int
-	State string
+	State      string
 }
 
 func New(config Config) (*Processor, error) {
@@ -48,8 +48,8 @@ func New(config Config) (*Processor, error) {
 }
 
 type Processor struct {
-	store      *datastore
-	processed  int64
+	store     *datastore
+	processed int64
 }
 
 func (p *Processor) AddHosts(hosts ...Host) error {

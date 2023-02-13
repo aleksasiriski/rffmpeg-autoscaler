@@ -1,28 +1,28 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 	"time"
-	"strings"
-	"context"
 
 	"database/sql"
-	_ "modernc.org/sqlite"
 	_ "github.com/lib/pq"
+	_ "modernc.org/sqlite"
 
-	"gopkg.in/natefinch/lumberjack.v2"
 	"github.com/alecthomas/kong"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"github.com/sourcegraph/conc"
+	"gopkg.in/natefinch/lumberjack.v2"
 
-	"github.com/hetznercloud/hcloud-go/hcloud"
 	"github.com/aleksasiriski/rffmpeg-autoscaler/migrate"
 	"github.com/aleksasiriski/rffmpeg-autoscaler/processor"
+	"github.com/hetznercloud/hcloud-go/hcloud"
 )
 
 var (
@@ -46,8 +46,8 @@ func main() {
 			Compact: true,
 		}),
 		kong.Vars{
-			"config_dir":	"/config",
-			"log_file":		"/config/log/rffmpeg-autoscaler.log",
+			"config_dir": "/config",
+			"log_file":   "/config/log/rffmpeg-autoscaler.log",
 		},
 	)
 
@@ -82,11 +82,11 @@ func main() {
 
 	// config
 	config, err := LoadConfig(cli.Config)
-    if err != nil {
+	if err != nil {
 		log.Fatal().
 			Err(err).
 			Msg("Cannot load config:")
-    }
+	}
 
 	// datastore
 	db, err := sql.Open(config.Database.Type, config.Database.Path)
@@ -109,9 +109,9 @@ func main() {
 
 	// processor
 	proc, err := processor.New(processor.Config{
-		Db:         db,
-		DbType:     config.Database.Type,
-		Mg:         mg,
+		Db:     db,
+		DbType: config.Database.Type,
+		Mg:     mg,
 	})
 	if err != nil {
 		log.Fatal().
@@ -133,14 +133,14 @@ func main() {
 	needToExit := false
 	ableToExit := false
 	var wg conc.WaitGroup
-	wg.Go(func () {
+	wg.Go(func() {
 		CheckProcessesAndRescale(config, proc, client, &needToExit, &ableToExit)
 	})
 
 	// handle interrupt signal
 	quitChannel := make(chan os.Signal, 1)
-    signal.Notify(quitChannel, syscall.SIGINT, syscall.SIGTERM)
-	
+	signal.Notify(quitChannel, syscall.SIGINT, syscall.SIGTERM)
+
 	// cleanup on interrupt signal
 	<-quitChannel
 	needToExit = true
@@ -150,7 +150,7 @@ func main() {
 }
 
 func CheckProcessesAndRescale(config Config, proc *processor.Processor, client *hcloud.Client, needToExit *bool, ableToExit *bool) {
-    log.Info().
+	log.Info().
 		Msg("Started checking for processes and rescaling")
 
 	for !*needToExit {
@@ -234,12 +234,12 @@ func CheckProcessesAndRescale(config Config, proc *processor.Processor, client *
 									if transcodes > config.Jellyfin.Jobs {
 										log.Info().
 											Msg(fmt.Sprintf("Found %d transcodes on host %s.", transcodes, host.Servername))
-										
+
 									} else {
 										log.Info().
 											Msg(fmt.Sprintf("Found less than %d transcodes on host %s.", config.Jellyfin.Jobs, host.Servername))
 										workers_with_room += 1
-									}	
+									}
 								}
 							}
 						}
@@ -260,7 +260,7 @@ func CheckProcessesAndRescale(config Config, proc *processor.Processor, client *
 		log.Info().
 			Msg("Sleeping for 5 minutes until next check.")
 		time.Sleep(time.Minute * 5)
-    }
+	}
 
 	log.Info().
 		Msg("Finished checking for processes and rescaling")
@@ -268,7 +268,7 @@ func CheckProcessesAndRescale(config Config, proc *processor.Processor, client *
 
 func createServer(config Config, proc *processor.Processor, client *hcloud.Client, needToExit *bool, ableToExit *bool) error {
 	ctx := context.Background()
-	
+
 	//! name := generateName()
 	serverType, _, err := client.ServerType.GetByName(ctx, config.Hetzner.Server)
 	image, _, err := client.Image.GetByName(ctx, config.Hetzner.Image)
@@ -287,11 +287,11 @@ func createServer(config Config, proc *processor.Processor, client *hcloud.Clien
 	server, _, err := client.Server.Create(ctx, hcloud.ServerCreateOpts{
 		//! Name: name,
 		ServerType: serverType,
-		Image: image,
-		SSHKeys: sshKeys,
-		Location: location,
-		UserData: config.Hetzner.CloudInit,
-		Networks: networks,
+		Image:      image,
+		SSHKeys:    sshKeys,
+		Location:   location,
+		UserData:   config.Hetzner.CloudInit,
+		Networks:   networks,
 		//!Firewalls: firewalls,
 		PlacementGroup: placementGroup,
 	})

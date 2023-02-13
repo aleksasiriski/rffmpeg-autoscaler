@@ -129,10 +129,11 @@ func main() {
 		Msg("Initialised")
 
 	// rffmpeg-autoscaler
-	exit := false
+	needToExit := false
+	ableToExit := false
 	var wg conc.WaitGroup
 	wg.Go(func () {
-		CheckProcessesAndRescale(config, proc, client, &exit)
+		CheckProcessesAndRescale(config, proc, client, &needToExit, &ableToExit)
 	})
 
 	// handle interrupt signal
@@ -141,15 +142,19 @@ func main() {
 	
 	// cleanup on interrupt signal
 	<-quitChannel
-	exit = true
-	wg.Wait()
+	needToExit = true
+	if !ableToExit {
+		wg.Wait()
+	}
 }
 
-func CheckProcessesAndRescale(config Config, proc *processor.Processor, client *hcloud.Client, exit *bool) {
+func CheckProcessesAndRescale(config Config, proc *processor.Processor, client *hcloud.Client, needToExit *bool, ableToExit *bool) {
     log.Info().
 		Msg("Started checking for processes and rescaling")
 
-	for !*exit {
+	for !*needToExit {
+		*ableToExit = false
+
 		numberOfHosts, err := proc.NumberOfHosts()
 		if err != nil {
 			log.Error().
@@ -189,13 +194,69 @@ func CheckProcessesAndRescale(config Config, proc *processor.Processor, client *
 								log.Debug().
 									Msg("Found no transcodes on fallback.")
 							}
-								
 						}
+					}
+				}
+			} else {
+				log.Debug().
+					Msg("Workers found. Checking if there are any workers with room.")
+				workers_with_room := 0
+				hosts, err := proc.GetAllHosts()
+				if err != nil {
+					log.Error().
+						Err(err).
+						Msg("Failed getting all hosts:")
+				} else {
+					for _, host := range hosts {
+						transcodes := 0
+						numberOfProcesses, err := proc.NumberOfProcessesFromHost(host)
+						if err != nil {
+							log.Error().
+								Err(err).
+								Msg(fmt.Sprintf("Failed getting the current number of processes for host %s:", host.Servername))
+						} else {
+							if numberOfProcesses == 0 {
+								log.Debug().
+									Msg(fmt.Sprintf("Found no processes on host %s.", host.Servername))
+							} else {
+								processes, err := proc.GetAllProcessesFromHost(host)
+								if err != nil {
+									log.Error().
+										Err(err).
+										Msg(fmt.Sprintf("Failed getting all processes from host %s:", host.Servername))
+								} else {
+									for _, process := range processes {
+										if strings.Contains(process.Cmd, "transcode") {
+											transcodes += 1
+										}
+									}
+									if transcodes > config.Jellyfin.Jobs {
+										log.Debug().
+											Msg(fmt.Sprintf("Found %d transcodes on host %s.", transcodes, host.Servername))
+										
+									} else {
+										log.Debug().
+											Msg(fmt.Sprintf("Found less than %d transcodes on host %s.", config.Jellyfin.Jobs, host.Servername))
+										workers_with_room += 1
+									}	
+								}
+							}
+						}
+					}
+					if workers_with_room > 0 {
+						log.Info().
+							Msg(fmt.Sprintf("Found %d workers with room.", workers_with_room))
+					} else {
+						log.Info().
+							Msg("All workers are busy, creating a new one.")
+						//! createServer
 					}
 				}
 			}
 		}
-		time.Sleep(time.Second * 5) //! Should be Minute
+
+		*ableToExit = true
+		time.Sleep(time.Minute * 5)
     }
 
 	log.Info().

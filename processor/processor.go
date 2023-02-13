@@ -72,6 +72,10 @@ func (p *Processor) NumberOfProcesses() (int, error) {
 	return p.store.GetProcessesRemaining()
 }
 
+func (p *Processor) NumberOfProcessesFromHost(host Host) (int, error) {
+	return p.store.GetProcessesRemainingWhere(host)
+}
+
 func (p *Processor) GetAllProcesses() ([]Process, error) {
 	return p.store.GetProcesses()
 }

@@ -174,6 +174,32 @@ func (store *datastore) GetProcessesRemaining() (int, error) {
 	return remaining, nil
 }
 
+func sqlGetProcessesRemainingWhere(dbType string) (string) {
+	switch dbType {
+	case "sqlite":
+		return `SELECT COUNT(id) FROM processes WHERE host_id=?`
+	case "postgres":
+		return `SELECT COUNT(id) FROM processes WHERE host_id=$1`
+	default:
+		panic(fmt.Errorf("Incorrect database type!"))
+	}
+}
+
+func (store *datastore) GetProcessesRemainingWhere(host Host) (int, error) {
+	row := store.QueryRow(sqlGetProcessesRemainingWhere(store.dbType), host.Id)
+
+	remaining := 0
+	err := row.Scan(&remaining)
+	switch {
+	case errors.Is(err, sql.ErrNoRows):
+		return remaining, nil
+	case err != nil:
+		return remaining, fmt.Errorf("get remaining processes where: %w", err)
+	}
+
+	return remaining, nil
+}
+
 const sqlGetProcesses = `SELECT * FROM processes`
 
 func (store *datastore) GetProcesses() (processes []Process, err error) {

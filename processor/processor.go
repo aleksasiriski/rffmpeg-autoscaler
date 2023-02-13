@@ -14,25 +14,25 @@ type Config struct {
 }
 
 type Host struct {
-	id int
-	servername string
-	hostname string
-	weight int
-	created time.Time
+	Id int
+	Servername string
+	Hostname string
+	Weight int
+	Created time.Time
 }
 
 type Process struct {
-	id int
-	host_id int
-	process_id int
-	cmd string
+	Id int
+	Host_id int
+	Process_id int
+	Cmd string
 }
 
 type State struct {
-	id int
-	host_id int
-	process_id int
-	state string
+	Id int
+	Host_id int
+	Process_id int
+	State string
 }
 
 func New(config Config) (*Processor, error) {

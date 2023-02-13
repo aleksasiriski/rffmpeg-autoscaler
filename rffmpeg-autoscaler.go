@@ -7,7 +7,7 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
-	//"strings"
+	"strings"
 
 	"github.com/alecthomas/kong"
 	"gopkg.in/natefinch/lumberjack.v2"
@@ -148,6 +148,7 @@ func main() {
 func CheckProcessesAndRescale(config Config, proc *processor.Processor, client *hcloud.Client, exit *bool) {
     log.Info().
 		Msg("Started checking for processes and rescaling")
+
 	for !*exit {
 		numberOfHosts, err := proc.NumberOfHosts()
 		if err != nil {
@@ -176,15 +177,14 @@ func CheckProcessesAndRescale(config Config, proc *processor.Processor, client *
 								Msg("Failed getting all processes:")
 						} else {
 							for _, process := range processes {
-								/*if strings.Contains(process.cmd, "transcode") {
+								if strings.Contains(process.Cmd, "transcode") {
 									transcodes += 1
-								}*/
-								fmt.Printf(fmt.Sprintf("%s", process))
+								}
 							}
 							if transcodes > 0 {
 								log.Info().
 									Msg(fmt.Sprintf("Found %d transcodes on fallback.", transcodes))
-								//createServer
+								//! createServer
 							} else {
 								log.Debug().
 									Msg("Found no transcodes on fallback.")
@@ -195,8 +195,9 @@ func CheckProcessesAndRescale(config Config, proc *processor.Processor, client *
 				}
 			}
 		}
-		time.Sleep(time.Second * 5) // Should be Minute
+		time.Sleep(time.Second * 5) //! Should be Minute
     }
+
 	log.Info().
 		Msg("Finished checking for processes and rescaling")
 }

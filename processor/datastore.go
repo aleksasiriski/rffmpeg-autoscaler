@@ -15,7 +15,7 @@ import (
 
 type datastore struct {
 	*sql.DB
-	DbType string
+	dbType string
 }
 
 var now = time.Now
@@ -74,7 +74,7 @@ func sqlUpsertHost(dbType string) (string) {
 }
 
 func (store *datastore) upsertHost(tx *sql.Tx, dbType string, host Host) error {
-	_, err := tx.Exec(sqlUpsertHost(dbType), host.servername, host.hostname, host.weight, host.created)
+	_, err := tx.Exec(sqlUpsertHost(dbType), host.Servername, host.Hostname, host.Weight, host.Created)
 	return err
 }
 
@@ -85,7 +85,7 @@ func (store *datastore) UpsertHosts(hosts []Host) error {
 	}
 
 	for _, host := range hosts {
-		if err = store.upsertHost(tx, store.DbType, host); err != nil {
+		if err = store.upsertHost(tx, store.dbType, host); err != nil {
 			if rollbackErr := tx.Rollback(); rollbackErr != nil {
 				panic(rollbackErr)
 			}
@@ -109,7 +109,7 @@ func sqlDeleteHost(dbType string) (string) {
 }
 
 func (store *datastore) DeleteHost(host Host) error {
-	_, err := store.Exec(sqlDeleteHost(store.DbType), host.servername)
+	_, err := store.Exec(sqlDeleteHost(store.dbType), host.Servername)
 	if err != nil {
 		return fmt.Errorf("delete: %w", err)
 	}
@@ -145,7 +145,7 @@ func (store *datastore) GetHosts() (hosts []Host, err error) {
 	defer rows.Close()
 	for rows.Next() {
 		host := Host{}
-		err = rows.Scan(&host.id, &host.servername, &host.hostname, &host.weight, &host.created)
+		err = rows.Scan(&host.Id, &host.Servername, &host.Hostname, &host.Weight, &host.Created)
 		if err != nil {
 			return hosts, err
 		}
@@ -184,7 +184,7 @@ func (store *datastore) GetProcesses() (processes []Process, err error) {
 	defer rows.Close()
 	for rows.Next() {
 		process := Process{}
-		err = rows.Scan(&process.id, &process.host_id, &process.process_id, &process.cmd)
+		err = rows.Scan(&process.Id, &process.Host_id, &process.Process_id, &process.Cmd)
 		if err != nil {
 			return processes, err
 		}
@@ -207,7 +207,7 @@ func sqlGetProcessesWhere(dbType string) (string) {
 }
 
 func (store *datastore) GetProcessesWhere(host Host) (processes []Process, err error) {
-	rows, err := store.Query(sqlGetProcessesWhere(store.DbType), host.id)
+	rows, err := store.Query(sqlGetProcessesWhere(store.dbType), host.Id)
 	if err != nil {
 		return processes, err
 	}
@@ -215,7 +215,7 @@ func (store *datastore) GetProcessesWhere(host Host) (processes []Process, err e
 	defer rows.Close()
 	for rows.Next() {
 		process := Process{}
-		err = rows.Scan(&process.id, &process.host_id, &process.process_id, &process.cmd)
+		err = rows.Scan(&process.Id, &process.Host_id, &process.Process_id, &process.Cmd)
 		if err != nil {
 			return processes, err
 		}
@@ -238,7 +238,7 @@ func sqlGetStatesWhere(dbType string) (string) {
 }
 
 func (store *datastore) GetStatesWhere(host Host) (states []State, err error) {
-	rows, err := store.Query(sqlGetStatesWhere(store.DbType), host.id)
+	rows, err := store.Query(sqlGetStatesWhere(store.dbType), host.Id)
 	if err != nil {
 		return states, err
 	}
@@ -246,7 +246,7 @@ func (store *datastore) GetStatesWhere(host Host) (states []State, err error) {
 	defer rows.Close()
 	for rows.Next() {
 		state := State{}
-		err = rows.Scan(&state.id, &state.host_id, &state.process_id, &state.state)
+		err = rows.Scan(&state.Id, &state.Host_id, &state.Process_id, &state.State)
 		if err != nil {
 			return states, err
 		}

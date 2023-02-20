@@ -2,6 +2,7 @@ Jellyfin:
   Host: thisisatest
   SshKey:
   Jobs:
+  Weight:
 Hetzner:
   Token: thisisatest
   Server:

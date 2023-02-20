@@ -12,6 +12,7 @@ type Jellyfin struct {
 	Host   string `mapstructure:"HOST"`
 	SshKey string `mapstructure:"SSH_KEY"`
 	Jobs   int    `mapstructure:"JOBS"`
+	Weight int    `mapstructure:"WEIGHT"`
 }
 
 type Hetzner struct {
@@ -54,6 +55,7 @@ func LoadConfig(path string) (Config, error) {
 		Jellyfin: Jellyfin{
 			SshKey: "/config/rffmpeg/.ssh/id_ed25519.pub",
 			Jobs:   2,
+			Weight: 1,
 		},
 		Hetzner: Hetzner{
 			Server:         "cpx21",

@@ -194,15 +194,23 @@ func createWorker(config Config, proc *processor.Processor, client *hcloud.Clien
 	log.Info().
 		Msg(fmt.Sprintf("Created a new worker %s.", serverName))
 
-	fmt.Println(serverIp)
-
-	proc.AddHosts(processor.Host{
+	host := processor.Host{
 		Servername: serverName,
 		Hostname:   serverIp,
 		Weight:     config.Jellyfin.Weight,
 		Created:    time.Now(),
-	})
+	}
 
+	log.Debug().
+		Msg(fmt.Sprintf("Adding worker %s with hostname %s to database.", serverName, serverIp))
+
+	err = proc.AddHosts(host)
+
+	if err != nil {
+		log.Error().
+			Err(err).
+			Msg(fmt.Sprintf("Failed adding worker %s to database.", serverName))
+	}
 	log.Debug().
 		Msg(fmt.Sprintf("Added worker %s to database.", serverName))
 

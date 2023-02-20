@@ -146,4 +146,15 @@ func main() {
 	// cleanup on interrupt signal
 	<-quitChannel
 	worker.Wait()
+
+	/*err = proc.AddHosts(processor.Host{
+		Servername: "serverName",
+		Hostname:   "10.10.10.10",
+		Weight:     config.Jellyfin.Weight,
+		Created:    time.Now(),
+	})
+	fmt.Println(err)
+
+	hosts, err := proc.GetAllHosts()
+	fmt.Println(hosts)*/
 }

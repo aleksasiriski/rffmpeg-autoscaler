@@ -35,6 +35,7 @@ I made and tested these images to use with this script:
 | JELLYFIN_HOST | Must be explicitly set! | The IP address or hostname of Jellyfin's NFS share that workers use to access transcodes and subtitles directories |
 | JELLYFIN_SSH_KEY | /config/rffmpeg/.ssh/id_ed25519.pub | Path to rffmpeg public ssh key generated on the Jellyfin host |
 | JELLYFIN_JOBS | 2 | Number of jobs allowed per worker, the default of 2 tells the script to only create a new worker if there are 2 or more jobs on the previous one. |
+| JELLYFIN_WEIGHT | 1 | Weight of the workers, higher numbers meaning they are more prefered for transcoding. Useful only if you have added custom workers or when using multiple scripts like this one |
 | HETZNER_TOKEN | Must be explicitly set! | Hetzner Cloud API token |
 | HETZNER_SERVER | cpx21 | The type of server from Hetzner that should be used for workers |
 | HETZNER_IMAGE | docker-ce | The OS image used on workers, `docker-ce` is Ubuntu with Docker preinstalled |

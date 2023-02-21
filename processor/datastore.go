@@ -58,16 +58,16 @@ func sqlUpsertHost(dbType string) string {
 		return `INSERT INTO hosts (servername, hostname, weight, created)
 				VALUES (?, ?, ?, ?)
 				ON CONFLICT (servername) DO UPDATE SET
-				    hostname = excluded.hostname
-				    weight = excluded.weight
+				    hostname = excluded.hostname,
+				    weight = excluded.weight,
 				    created = excluded.created
 				`
 	case "postgres":
 		return `INSERT INTO hosts (servername, hostname, weight, created)
 				VALUES ($1, $2, $3, $4)
 				ON CONFLICT (servername) DO UPDATE SET
-				    hostname = excluded.hostname
-				    weight = excluded.weight
+				    hostname = excluded.hostname,
+				    weight = excluded.weight,
 				    created = excluded.created
 				`
 	default:
@@ -75,26 +75,18 @@ func sqlUpsertHost(dbType string) string {
 	}
 }
 
-func (store *datastore) upsertHost(tx *sql.Tx, dbType string, host Host) error {
-	_, err := tx.Exec(sqlUpsertHost(dbType), host.Servername, host.Hostname, host.Weight, host.Created)
-	return err
-}
-
-func (store *datastore) UpsertHosts(hosts []Host) error {
+func (store *datastore) UpsertHost(host Host) error {
 	tx, err := store.Begin()
 	if err != nil {
 		return err
 	}
 
-	for _, host := range hosts {
-		if err = store.upsertHost(tx, store.dbType, host); err != nil {
+		if _, err = tx.Exec(sqlUpsertHost(store.dbType), host.Servername, host.Hostname, host.Weight, host.Created); err != nil {
 			if rollbackErr := tx.Rollback(); rollbackErr != nil {
 				panic(rollbackErr)
 			}
-
 			return err
 		}
-	}
 
 	return tx.Commit()
 }

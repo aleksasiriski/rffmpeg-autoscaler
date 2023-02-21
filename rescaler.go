@@ -85,6 +85,7 @@ func CheckProcessesAndRescale(config Config, proc *processor.Processor, client *
 						if numberOfProcesses == 0 {
 							log.Info().
 								Msg(fmt.Sprintf("Found no processes on host %s.", host.Servername))
+							workers_with_room += 1
 						} else {
 							processes, err := proc.GetAllProcessesFromHost(host)
 							if err != nil {
@@ -204,7 +205,7 @@ func createWorker(config Config, proc *processor.Processor, client *hcloud.Clien
 	log.Debug().
 		Msg(fmt.Sprintf("Adding worker %s with hostname %s to database.", serverName, serverIp))
 
-	err = proc.AddHosts(host)
+	err = proc.AddHost(host)
 
 	if err != nil {
 		log.Error().
@@ -233,4 +234,44 @@ func generateName(ctx context.Context, client *hcloud.Client) string {
 			return name
 		}
 	}
+}
+
+func deleteWorker(config Config, proc *processor.Processor, client *hcloud.Client, host processor.Host) error {
+	log.Info().
+		Msg(fmt.Sprintf("Removing worker %s.", host.Servername))
+
+	log.Debug().
+		Msg("Sending request to get worker from Hetzner.")
+
+	ctx := context.Background()
+
+	server, _, err := client.Server.GetByName(ctx, host.Servername)
+	if err != nil {
+		return err
+	}
+
+	log.Debug().
+		Msg("Sending request to remove worker from Hetzner.")
+
+	_, err = client.Server.Delete(ctx, server)
+	if err != nil {
+		return err
+	}
+
+	log.Debug().
+		Msg(fmt.Sprintf("Removed worker %s from Hetzner.", host.Servername))
+
+	log.Debug().
+		Msg(fmt.Sprintf("Removing worker %s from database.", host.Servername))
+
+	err = proc.RemoveHost(host)
+	if err != nil {
+		log.Error().
+			Err(err).
+			Msg(fmt.Sprintf("Failed removing worker %s from database.", host.Servername))
+	}
+	log.Debug().
+		Msg(fmt.Sprintf("Removed worker %s from database.", host.Servername))
+
+	return err
 }

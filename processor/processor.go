@@ -52,8 +52,8 @@ type Processor struct {
 	processed int64
 }
 
-func (p *Processor) AddHosts(hosts ...Host) error {
-	return p.store.UpsertHosts(hosts)
+func (p *Processor) AddHost(host Host) error {
+	return p.store.UpsertHost(host)
 }
 
 func (p *Processor) RemoveHost(host Host) error {

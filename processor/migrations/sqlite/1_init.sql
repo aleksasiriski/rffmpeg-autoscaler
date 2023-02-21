@@ -1,10 +1,9 @@
 CREATE TABLE IF NOT EXISTS hosts (
-    "id" INTEGER,
-    "servername" TEXT NOT NULL,
+    "id" INTEGER PRIMARY KEY,
+    "servername" TEXT NOT NULL UNIQUE,
     "hostname" TEXT NOT NULL,
     "weight" INTEGER DEFAULT 1,
-    "created" DATETIME NOT NULL,
-    PRIMARY KEY ("id", "servername")
+    "created" DATETIME NOT NULL
 );
 CREATE TABLE IF NOT EXISTS processes (
     "id" INTEGER PRIMARY KEY,

@@ -13,9 +13,9 @@ Check [this](https://github.com/aleksasiriski/rffmpeg-worker) out!
 
 1) Use this image: `ghcr.io/aleksasiriski/rffmpeg-autoscaler:latest`
 1) Set the required environment variables
-1) Share the Jellyfin config volume with this image (the only really needed thing is Sqlite DB that rffmpeg uses if you haven't setup Postgres, other than that it's convenient for **rffmpeg-autoscaler** to store log file inside Jellyfin's `/config/log` dir because you can read the log from Jellyfin's interface)
-1) All of your workers need Jellyfin's `/config/transcodes` and `/config/data/subtitles` directories available and mounted at the same path as the Jellyfin host. Best solution is to use `NFSv4` with `sync` option.
-1) Also, I recommend using Hetzner Storage Box for media share (cifs/samba) and setting `MEDIA_USERNAME` and `MEDIA_PASSWORD`, but if you aren't using it you will need to share that directory with the workers as well.
+1) Share the Jellyfin config volume with this image (the only things that are really needed: Sqlite DB that rffmpeg uses if you haven't setup Postgres and rffmpeg's public ssh key, other than that it's convenient for **rffmpeg-autoscaler** to store log file inside Jellyfin's `/config/log` dir because you can read the log from Jellyfin's interface)
+1) All of your workers need Jellyfin's `/config/transcodes` and `/config/data/subtitles` directories available and mounted at the same path as the Jellyfin host. Best solution is to use `NFSv4`.
+1) Also, I recommend using Hetzner Storage Box for media share (cifs/samba) and setting `MEDIA_USERNAME` and `MEDIA_PASSWORD`, but if you aren't using it you will need to share media directory with the workers as well.
 
 If you need a reference docker compose file with NFS server use [this one](https://github.com/aleksasiriski/rffmpeg-autoscaler/blob/main/docker-compose/docker-compose.example.yml).
 

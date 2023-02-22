@@ -118,7 +118,7 @@ func main() {
 			Msg("Failed initialising processor:")
 	}
 
-	// hetzner
+	// cloud
 	client := hcloud.NewClient(hcloud.WithToken(config.Hetzner.Token))
 	_, err = client.Server.All(context.Background())
 	if err != nil {
@@ -149,8 +149,6 @@ func main() {
 	// handle interrupt signal
 	quitChannel := make(chan os.Signal, 1)
 	signal.Notify(quitChannel, syscall.SIGINT, syscall.SIGTERM)
-
-	// cleanup on interrupt signal
 	<-quitChannel
 	worker.Wait()
 }

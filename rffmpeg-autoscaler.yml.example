@@ -1,10 +1,12 @@
 Jellyfin:
-  Host: thisisatest
+# Host is required
+  Host:
   SshKey:
   Jobs:
   Weight:
 Hetzner:
-  Token: thisisatest
+# Token is required
+  Token:
   Server:
   Image:
   SshKey:

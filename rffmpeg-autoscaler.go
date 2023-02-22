@@ -119,12 +119,18 @@ func main() {
 
 	// hetzner
 	client := hcloud.NewClient(hcloud.WithToken(config.Hetzner.Token))
+	_, err := client.Server.All(ctx)
+	if err != nil {
+		log.Fatal().
+			Err(err).
+			Msg("Failed initialising cloud (check token):")
+	}
 
 	// display initialised banner
 	log.Info().
 		Str("Migrator", fmt.Sprintf("success")).
 		Str("Processor", fmt.Sprintf("success")).
-		Str("Hcloud", fmt.Sprintf("success")).
+		Str("Cloud", fmt.Sprintf("success")).
 		Msg("Initialised")
 
 	// rffmpeg-autoscaler

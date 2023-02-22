@@ -11,7 +11,7 @@ ENV \
   RFFMPEG_AUTOSCALER_VERBOSITY="0"
 
 # Binary
-COPY ["rffmpeg-autoscaler.yml.example", "/config/rffmpeg-autoscaler.yml"]
+COPY ["docker/rffmpeg-autoscaler.yml.example", "/config/rffmpeg-autoscaler.yml"]
 
 # Binary
 COPY ["dist/rffmpeg-autoscaler_${TARGETOS}_${TARGETARCH}${TARGETVARIANT:+_7}/rffmpeg-autoscaler", "/app/rffmpeg-autoscaler/rffmpeg-autoscaler"]

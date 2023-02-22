@@ -129,9 +129,9 @@ func main() {
 
 	// display initialised banner
 	log.Info().
-		Str("Migrator", fmt.Sprintf("success")).
-		Str("Processor", fmt.Sprintf("success")).
-		Str("Cloud", fmt.Sprintf("success")).
+		Str("Migrator", "success").
+		Str("Processor", "success").
+		Str("Cloud", "success").
 		Msg("Initialised")
 
 	// rffmpeg-autoscaler

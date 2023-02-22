@@ -260,7 +260,7 @@ func generateServerInfo(ctx context.Context, config Config, client *hcloud.Clien
 
 	sshKeys := []*hcloud.SSHKey{sshKey}
 	networks := []*hcloud.Network{network}
-	firewalls := []*hcloud.ServerCreateFirewall{&hcloud.ServerCreateFirewall{
+	firewalls := []*hcloud.ServerCreateFirewall{{
 		Firewall: *firewall,
 	}}
 

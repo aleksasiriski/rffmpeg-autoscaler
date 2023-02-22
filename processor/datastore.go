@@ -81,12 +81,12 @@ func (store *datastore) UpsertHost(host Host) error {
 		return err
 	}
 
-		if _, err = tx.Exec(sqlUpsertHost(store.dbType), host.Servername, host.Hostname, host.Weight, host.Created); err != nil {
-			if rollbackErr := tx.Rollback(); rollbackErr != nil {
-				panic(rollbackErr)
-			}
-			return err
+	if _, err = tx.Exec(sqlUpsertHost(store.dbType), host.Servername, host.Hostname, host.Weight, host.Created); err != nil {
+		if rollbackErr := tx.Rollback(); rollbackErr != nil {
+			panic(rollbackErr)
 		}
+		return err
+	}
 
 	return tx.Commit()
 }

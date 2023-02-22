@@ -111,6 +111,16 @@ jobs:
           path: .task/**/*
           key: ${{ runner.os }}-go-task
 
+      # vendor
+      - name: vendor
+        run: |
+          task vendor
+
+      # test
+      #- name: tests
+      #  run: |
+      #    task test
+
       # git status
       - name: git status
         run: git status

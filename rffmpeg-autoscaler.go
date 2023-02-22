@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"os"
@@ -119,7 +120,7 @@ func main() {
 
 	// hetzner
 	client := hcloud.NewClient(hcloud.WithToken(config.Hetzner.Token))
-	_, err := client.Server.All(ctx)
+	_, err = client.Server.All(context.Background())
 	if err != nil {
 		log.Fatal().
 			Err(err).

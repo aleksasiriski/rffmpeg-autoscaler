@@ -8,7 +8,7 @@ import (
 
 	"github.com/rs/zerolog/log"
 
-	"github.com/aleksasiriski/rffmpeg-autoscaler/processor"
+	"github.com/aleksasiriski/rffmpeg-go/processor"
 	"github.com/google/uuid"
 	"github.com/hetznercloud/hcloud-go/hcloud"
 	"github.com/sourcegraph/conc"
@@ -205,9 +205,7 @@ func createWorker(config Config, proc *processor.Processor, client *hcloud.Clien
 		Created:    time.Now(),
 	})
 	if err != nil {
-		log.Error().
-			Err(err).
-			Msg(fmt.Sprintf("Failed adding worker %s to database.", Servername))
+		return err
 	}
 
 	log.Debug().
@@ -330,10 +328,9 @@ func deleteWorker(config Config, proc *processor.Processor, client *hcloud.Clien
 
 	err = proc.RemoveHost(host)
 	if err != nil {
-		log.Error().
-			Err(err).
-			Msg(fmt.Sprintf("Failed removing worker %s from database.", host.Servername))
+		return err
 	}
+
 	log.Debug().
 		Msg(fmt.Sprintf("Removed worker %s from database.", host.Servername))
 

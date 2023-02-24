@@ -19,8 +19,8 @@ import (
 	"github.com/sourcegraph/conc"
 	"gopkg.in/natefinch/lumberjack.v2"
 
-	"github.com/aleksasiriski/rffmpeg-autoscaler/migrate"
-	"github.com/aleksasiriski/rffmpeg-autoscaler/processor"
+	"github.com/aleksasiriski/rffmpeg-go/migrate"
+	"github.com/aleksasiriski/rffmpeg-go/processor"
 	"github.com/hetznercloud/hcloud-go/hcloud"
 )
 

@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	github.com/alecthomas/kong v0.7.1
-	github.com/aleksasiriski/rffmpeg-go v0.0.0-20230225235634-8ee8eaacfe46
+	github.com/aleksasiriski/rffmpeg-go v0.0.0-20230226002127-44465a0a0084
 	github.com/google/uuid v1.3.0
 	github.com/hetznercloud/hcloud-go v1.40.0
 	github.com/lib/pq v1.10.7

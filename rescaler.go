@@ -37,7 +37,7 @@ func CheckProcessesAndRescale(config Config, proc *processor.Processor, client *
 				log.Info().
 					Msg("Found no processes on fallback.")
 			} else {
-				processes, err := proc.GetAllProcessesFromHost(fallback)
+				processes, err := proc.GetProcessesFromHost(fallback)
 				if err != nil {
 					return err
 				} else {
@@ -61,7 +61,7 @@ func CheckProcessesAndRescale(config Config, proc *processor.Processor, client *
 			if numberOfHosts > 0 {
 				log.Info().
 					Msg("Workers found. Checking if there are any workers with room.")
-				hosts, err := proc.GetAllHosts()
+				hosts, err := proc.GetHosts()
 				if err != nil {
 					return err
 				} else {
@@ -77,7 +77,7 @@ func CheckProcessesAndRescale(config Config, proc *processor.Processor, client *
 								workersWithRoom += 1
 								uselessWorkers = append(uselessWorkers, host)
 							} else {
-								processes, err := proc.GetAllProcessesFromHost(host)
+								processes, err := proc.GetProcessesFromHost(host)
 								if err != nil {
 									return err
 								} else {

@@ -14,15 +14,13 @@ import (
 	"github.com/sourcegraph/conc"
 )
 
-func CheckProcessesAndRescale(config Config, proc *processor.Processor, client *hcloud.Client) {
+func CheckProcessesAndRescale(config Config, proc *processor.Processor, client *hcloud.Client) error {
 	log.Info().
 		Msg("Started checking for processes and rescaling.")
 
 	numberOfHosts, err := proc.NumberOfHosts()
 	if err != nil {
-		log.Error().
-			Err(err).
-			Msg("Failed getting the current number of hosts:")
+		return err
 	} else {
 		log.Info().
 			Msg("Checking if there are any transcodes on fallback.")
@@ -32,9 +30,7 @@ func CheckProcessesAndRescale(config Config, proc *processor.Processor, client *
 		}
 		numberOfProcesses, err := proc.NumberOfProcessesFromHost(fallback)
 		if err != nil {
-			log.Error().
-				Err(err).
-				Msg("Failed getting the current number of processes:")
+			return err
 		} else {
 			fallbackTranscodes := 0
 			if numberOfProcesses == 0 {
@@ -43,9 +39,7 @@ func CheckProcessesAndRescale(config Config, proc *processor.Processor, client *
 			} else {
 				processes, err := proc.GetAllProcessesFromHost(fallback)
 				if err != nil {
-					log.Error().
-						Err(err).
-						Msg("Failed getting all processes:")
+					return err
 				} else {
 					for _, process := range processes {
 						if strings.Contains(process.Cmd, "transcode") {
@@ -69,17 +63,13 @@ func CheckProcessesAndRescale(config Config, proc *processor.Processor, client *
 					Msg("Workers found. Checking if there are any workers with room.")
 				hosts, err := proc.GetAllHosts()
 				if err != nil {
-					log.Error().
-						Err(err).
-						Msg("Failed getting all hosts:")
+					return err
 				} else {
 					for _, host := range hosts {
 						workerTranscodes := 0
 						numberOfProcesses, err := proc.NumberOfProcessesFromHost(host)
 						if err != nil {
-							log.Error().
-								Err(err).
-								Msg(fmt.Sprintf("Failed getting the current number of processes for host %s:", host.Servername))
+							return err
 						} else {
 							if numberOfProcesses == 0 {
 								log.Info().
@@ -89,9 +79,7 @@ func CheckProcessesAndRescale(config Config, proc *processor.Processor, client *
 							} else {
 								processes, err := proc.GetAllProcessesFromHost(host)
 								if err != nil {
-									log.Error().
-										Err(err).
-										Msg(fmt.Sprintf("Failed getting all processes from host %s:", host.Servername))
+									return err
 								} else {
 									for _, process := range processes {
 										if strings.Contains(process.Cmd, "transcode") {
@@ -130,9 +118,7 @@ func CheckProcessesAndRescale(config Config, proc *processor.Processor, client *
 				if workersWithRoom == 0 {
 					err := createWorker(config, proc, client)
 					if err != nil {
-						log.Error().
-							Err(err).
-							Msg("Failed to create a new worker")
+						return err
 					}
 				}
 			} else {
@@ -143,7 +129,7 @@ func CheckProcessesAndRescale(config Config, proc *processor.Processor, client *
 						if err != nil {
 							log.Error().
 								Err(err).
-								Msg(fmt.Sprintf("Failed to delete worker %s", uselessWorker.Servername))
+								Msg(fmt.Sprintf("Failed to delete useless worker %s:", uselessWorker.Servername))
 						}
 					})
 				}
@@ -154,6 +140,8 @@ func CheckProcessesAndRescale(config Config, proc *processor.Processor, client *
 
 	log.Info().
 		Msg("Finished checking for processes and rescaling.")
+
+	return nil
 }
 
 func createWorker(config Config, proc *processor.Processor, client *hcloud.Client) error {

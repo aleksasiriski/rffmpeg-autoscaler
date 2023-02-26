@@ -140,7 +140,12 @@ func main() {
 	helper.Go(func() {
 		for {
 			worker.Go(func() {
-				CheckProcessesAndRescale(config, proc, client)
+				err := CheckProcessesAndRescale(config, proc, client)
+				if err != nil {
+					log.Error().
+						Err(err).
+						Msg("Failed while rescaling workers:")
+				}
 			})
 			time.Sleep(time.Minute * 5)
 		}

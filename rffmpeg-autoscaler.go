@@ -118,6 +118,14 @@ func main() {
 			Msg("Failed initialising processor:")
 	}
 
+	// database connection
+	databaseVersion, err := proc.GetVersion()
+	if err != nil {
+		log.Fatal().
+			Err(err).
+			Msg("Failed getting database version:")
+	}
+
 	// cloud
 	client := hcloud.NewClient(hcloud.WithToken(config.Hetzner.Token))
 	_, err = client.Server.All(context.Background())
@@ -131,6 +139,7 @@ func main() {
 	log.Info().
 		Str("Migrator", "success").
 		Str("Processor", "success").
+		Str("Database", databaseVersion).
 		Str("Cloud", "success").
 		Msg("Initialised")
 

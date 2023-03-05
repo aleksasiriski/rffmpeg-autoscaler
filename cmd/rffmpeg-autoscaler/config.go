@@ -103,38 +103,35 @@ func LoadConfig(path string) (Config, error) {
 	if config.Hetzner.Token == "" {
 		return config, fmt.Errorf("hetzner token is not specified")
 	}
-	if config.Database.Type != "sqlite" && config.Database.Type != "postgres" {
-		return config, fmt.Errorf("database type must be sqlite or postgres")
-	}
-
-	sshkeypath, err := filepath.Abs(config.Jellyfin.SshKey)
-	if err != nil {
-		return config, fmt.Errorf("failed loading ssh key file: %w", err)
-	}
-	dbpath, err := filepath.Abs(config.Database.Path)
-	if err != nil {
-		return config, fmt.Errorf("failed loading sqlite file: %w", err)
-	}
-	config.Jellyfin.SshKey = sshkeypath
-	config.Database.Path = dbpath
 
 	switch config.Database.Type {
 	case "sqlite":
 		{
-			config.Database.MigratorDir = "migrations/sqlite"
 			err := os.MkdirAll(filepath.Dir(config.Database.Path), os.ModePerm)
 			if err != nil {
 				return config, fmt.Errorf("failed creating database directory: %w", err)
 			}
-			config.Database.Path = config.Database.Path + "?_foreign_keys=on"
+			dbpath, err := filepath.Abs(config.Database.Path)
+			if err != nil {
+				return config, fmt.Errorf("failed loading sqlite file: %w", err)
+			}
+			config.Database.Path = dbpath + "?_foreign_keys=on"
+			config.Database.MigratorDir = "migrations/sqlite"
 		}
 	case "postgres":
 		{
-			config.Database.MigratorDir = "migrations/postgres"
 			config.Database.Path = fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", config.Database.Host, config.Database.Port, config.Database.Username, config.Database.Password, config.Database.Name)
+			config.Database.MigratorDir = "migrations/postgres"
 		}
+	default:
+		return config, fmt.Errorf("database type isn't supported")
 	}
+
 	config.Hetzner.CloudInit = fmt.Sprintf(config.Hetzner.CloudInit, config.Jellyfin.Host, config.Media.Username, config.Media.Password)
+	sshkeypath, err := filepath.Abs(config.Jellyfin.SshKey)
+	if err != nil {
+		return config, fmt.Errorf("failed loading ssh key file: %w", err)
+	}
 
 	return config, err
 }

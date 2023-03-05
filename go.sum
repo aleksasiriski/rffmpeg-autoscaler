@@ -42,8 +42,8 @@ github.com/alecthomas/assert/v2 v2.1.0 h1:tbredtNcQnoSd3QBhQWI7QZ3XHOVkw1Moklp2o
 github.com/alecthomas/kong v0.7.1 h1:azoTh0IOfwlAX3qN9sHWTxACE2oV8Bg2gAwBsMwDQY4=
 github.com/alecthomas/kong v0.7.1/go.mod h1:n1iCIO2xS46oE8ZfYCNDqdR0b0wZNrXAIAqro/2132U=
 github.com/alecthomas/repr v0.1.0 h1:ENn2e1+J3k09gyj2shc0dHr/yjaWSHRlrJ4DPMevDqE=
-github.com/aleksasiriski/rffmpeg-go v0.0.0-20230305161702-b74186f2066c h1:U7ClW/4s5/17FlJsQ5RqUB/Mg+KrWljZml+RZ9AJqcU=
-github.com/aleksasiriski/rffmpeg-go v0.0.0-20230305161702-b74186f2066c/go.mod h1:62+5sf3PEFFtAS1yWubDApLdfvIVGn3qW0mF1IqfsZ4=
+github.com/aleksasiriski/rffmpeg-go v0.0.0-20230305173628-c1b541c3ea04 h1:hZqUiUVMJ6jkldBUH2W11aqy7MzoHt7bpIkndiy0jIw=
+github.com/aleksasiriski/rffmpeg-go v0.0.0-20230305173628-c1b541c3ea04/go.mod h1:62+5sf3PEFFtAS1yWubDApLdfvIVGn3qW0mF1IqfsZ4=
 github.com/beorn7/perks v1.0.1 h1:VlbKKnNfV8bJzeqoa4cOKqO6bYr3WgKZxO8Z16+hsOM=
 github.com/beorn7/perks v1.0.1/go.mod h1:G2ZrVWU2WbWT9wwq4/hrbKbnv/1ERSJQ0ibhJ6rlkpw=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=

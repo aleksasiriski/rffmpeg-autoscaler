@@ -132,6 +132,7 @@ func LoadConfig(path string) (Config, error) {
 	if err != nil {
 		return config, fmt.Errorf("failed loading ssh key file: %w", err)
 	}
+	config.Jellyfin.SshKey = sshkeypath
 
 	return config, err
 }

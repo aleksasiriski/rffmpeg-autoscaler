@@ -10,7 +10,7 @@ builds:
       - linux
       - darwin
       - freebsd
-    main: ./
+    main: ./cmd/{{ .ProjectName }}
     goarch:
       - amd64
       - arm64

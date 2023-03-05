@@ -48,7 +48,7 @@ tasks:
         -mod vendor \
         -trimpath \
         -ldflags "-s -w -X main.Version=${VERSION} -X main.GitCommit=${GIT_COMMIT} -X main.Timestamp=${TIMESTAMP}" \
-        ./cmd/{{.APP}}
+        ../../cmd/{{.APP}}
 
   release:
     desc: Generate a release, but don't publish

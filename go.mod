@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	github.com/alecthomas/kong v0.7.1
-	github.com/aleksasiriski/rffmpeg-go v0.0.0-20230305015727-4e75b759711a
+	github.com/aleksasiriski/rffmpeg-go v0.0.0-20230305161702-b74186f2066c
 	github.com/google/uuid v1.3.0
 	github.com/hetznercloud/hcloud-go v1.40.0
 	github.com/lib/pq v1.10.7
@@ -41,7 +41,7 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/subosito/gotenv v1.4.2 // indirect
 	golang.org/x/mod v0.9.0 // indirect
-	golang.org/x/net v0.7.0 // indirect
+	golang.org/x/net v0.8.0 // indirect
 	golang.org/x/sys v0.6.0 // indirect
 	golang.org/x/text v0.8.0 // indirect
 	golang.org/x/tools v0.6.0 // indirect

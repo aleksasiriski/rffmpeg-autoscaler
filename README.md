@@ -47,6 +47,7 @@ I made and tested these images to use with this script:
 | HETZNER_LOCATION | nbg1 | The name of the location in which the workers should be created |
 | HETZNER_CLOUD_INIT | [string](https://github.com/aleksasiriski/rffmpeg-autoscaler/blob/main/config.go#L68) | The string that setups the workers after creation, the default uses my docker compose and inserts needed env variables |
 | DATABASE_TYPE | sqlite | Must be 'sqlite' or 'postgres` |
+| DATABASE_PATH | /config/rffmpeg/db/rffmpeg.db | Path to the SQLite DB, ignored when type is postgres |
 | DATABASE_HOST | localhost | Postgres database host |
 | DATABASE_PORT | 5432 | Postgres database port |
 | DATABASE_NAME | rffmpeg | Postgres database name |

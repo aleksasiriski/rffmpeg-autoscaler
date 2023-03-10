@@ -1,0 +1,55 @@
+version: "3.9"
+services:
+  jellyfin:
+    image: ghcr.io/aleksasiriski/jellyfin-rffmpeg:latest
+    environment:
+      - TZ=Europe/Berlin
+      # - DATABASE_TYPE=postgres
+      # - DATABASE_HOST=localhost
+      # - DATABASE_PORT=5432
+      # - DATABASE_NAME=rffmpeg
+      # - DATABASE_USERNAME=postgres
+      # - DATABASE_PASSWORD=supersecurepassword
+    ports:
+      - ${JELLYFIN_LAN_ONLY_IP:-}:8096:8096 # public should access via reverse proxy
+    volumes:
+      - jellyfin-conf:/config:z
+      - /var/storage/media:/var/storage/media # optional media folder
+    restart: always
+  nfs-server:
+    image: ghcr.io/obeone/nfs-server:latest
+    cap_add:
+      - SYS_ADMIN
+    environment:
+      - TZ=Europe/Berlin
+      - NFS_EXPORT_0="/config/transcodes      *(rw,sync,no_subtree_check,no_root_squash)"
+      - NFS_EXPORT_1="/config/data/subtitles  *(rw,sync,no_subtree_check,no_root_squash)"
+      # optional media folder share, if your media folder is already a network share you must remove this
+      - NFS_EXPORT_2="/var/storage/media      *(rw,sync,no_subtree_check,no_root_squash)"
+    ports:
+      - ${JELLYFIN_LAN_ONLY_IP:-}:2049:2049
+    volumes:
+      - jellyfin-conf:/config:z
+      - /var/storage/media:/var/storage/media # optional media folder
+    restart: always
+  rffmpeg-autoscaler:
+    image: ghcr.io/aleksasiriski/rffmpeg-autoscaler:latest
+    environment:
+      - TZ=Europe/Berlin
+      - JELLYFIN_HOST=$JELLYFIN_LAN_ONLY_IP
+      - HETZNER_TOKEN=$HETZNER_TOKEN
+      # This must be the same as for Jellyfin, it's recommended over the default SQLite
+      # - DATABASE_TYPE=postgres
+      # - DATABASE_HOST=localhost
+      # - DATABASE_PORT=5432
+      # - DATABASE_NAME=rffmpeg
+      # - DATABASE_USERNAME=postgres
+      # - DATABASE_PASSWORD=supersecurepassword
+      # If you want to use SMB/CIFS mount for workers, you can pass credentials with these env vars
+      # - MEDIA_USERNAME=$MEDIA_USERNAME_FOR_WORKERS
+      # - MEDIA_PASSWORD=$MEDIA_PASSWORD_FOR_WORKERS
+    volumes:
+      - jellyfin-conf:/config:z # It's highly recommended to setup Postgres instead of using SQLite, but this volume should remain available for logs to appear in Jellyfin's admin interface
+    restart: always
+volumes:
+  jellyfin-conf:

@@ -10,7 +10,7 @@ ENV \
   RFFMPEG_AUTOSCALER_LOG="/config/log/rffmpeg-autoscaler.log" \
   RFFMPEG_AUTOSCALER_VERBOSITY="0"
 
-# Binary
+# Config
 COPY ["docker/rffmpeg-autoscaler.yml.example", "/config/rffmpeg-autoscaler.yml"]
 
 # Binary

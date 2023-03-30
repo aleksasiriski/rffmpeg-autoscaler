@@ -159,7 +159,7 @@ func main() {
 
 	// handle interrupt signal
 	quitChannel := make(chan os.Signal, 1)
-	signal.Notify(quitChannel, syscall.SIGINT, syscall.SIGTERM)
+	signal.Notify(quitChannel, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT, syscall.SIGHUP, os.Interrupt, os.Kill)
 	<-quitChannel
 	worker.Wait()
 }

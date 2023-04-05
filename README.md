@@ -7,7 +7,9 @@ Automagically scale number of rffmpeg workers in the cloud, written in Go!
 
 ## Kubernetes
 
-Check [this](https://github.com/aleksasiriski/rffmpeg-worker) out!
+On Kubernetes you can use [Longhorn](https://longhorn.io) RWX volumes (NFSv4) and mount said paths to Jellyfin host and workers (must be exactly the same mount points!).
+
+Here's a [Helm chart repo with instuctions](https://github.com/aleksasiriski/jellyfin-kubernetes)
 
 ## Setup
 

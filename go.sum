@@ -141,8 +141,8 @@ github.com/hashicorp/golang-lru v0.5.0/go.mod h1:/m3WP610KZHVQ1SGc6re/UDhFvYD7pJ
 github.com/hashicorp/golang-lru v0.5.1/go.mod h1:/m3WP610KZHVQ1SGc6re/UDhFvYD7pJ4Ao+sR/qLZy8=
 github.com/hashicorp/hcl v1.0.0 h1:0Anlzjpi4vEasTeNFn2mLJgTSwt0+6sfsiTG8qcWGx4=
 github.com/hashicorp/hcl v1.0.0/go.mod h1:E5yfLk+7swimpb2L/Alb/PJmXilQ/rhwaUYs4T20WEQ=
-github.com/hetznercloud/hcloud-go v1.44.0 h1:zMqXHs9crinVy7SkaVCREk7hN2THqxPCEKZ4H3mY2rI=
-github.com/hetznercloud/hcloud-go v1.44.0/go.mod h1:aAUGxSfSnB8/lVXHNEDxtCT1jykaul8kqjD7f5KQXF8=
+github.com/hetznercloud/hcloud-go v1.45.1 h1:nl0OOklFfQT5J6AaNIOhl5Ruh3fhmGmhvZEqHbibVuk=
+github.com/hetznercloud/hcloud-go v1.45.1/go.mod h1:aAUGxSfSnB8/lVXHNEDxtCT1jykaul8kqjD7f5KQXF8=
 github.com/hexops/gotextdiff v1.0.3 h1:gitA9+qJrrTCsiCl7+kh75nPqQt1cx4ZkudSTLoUqJM=
 github.com/ianlancetaylor/demangle v0.0.0-20181102032728-5e5cf60278f6/go.mod h1:aSSvb/t6k1mPoxDqO4vJh6VOCGPwU4O0C2/Eqndh1Sc=
 github.com/ianlancetaylor/demangle v0.0.0-20200824232613-28f6c0f3b639/go.mod h1:aSSvb/t6k1mPoxDqO4vJh6VOCGPwU4O0C2/Eqndh1Sc=

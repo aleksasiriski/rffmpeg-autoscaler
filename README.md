@@ -1,6 +1,6 @@
 # rffmpeg-autoscaler
 
-Automagically scale number of rffmpeg workers in the cloud, written in Go!
+Automagically scale number of rffmpeg workers in the cloud
 
 ## NOTICE!
 **This is a rewrite of [Hcloud Rffmpeg](https://github.com/aleksasiriski/hcloud-rffmpeg) and currently it only supports Hetzner Cloud.**

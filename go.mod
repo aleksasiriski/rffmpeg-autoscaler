@@ -3,7 +3,7 @@ module github.com/aleksasiriski/rffmpeg-autoscaler
 go 1.19
 
 require (
-	github.com/alecthomas/kong v0.7.1
+	github.com/alecthomas/kong v0.8.0
 	github.com/aleksasiriski/rffmpeg-go v1.2.1
 	github.com/google/uuid v1.3.0
 	github.com/hetznercloud/hcloud-go v1.46.1

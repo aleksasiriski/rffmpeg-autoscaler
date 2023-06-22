@@ -6,7 +6,7 @@ require (
 	github.com/alecthomas/kong v0.8.0
 	github.com/aleksasiriski/rffmpeg-go v1.2.1
 	github.com/google/uuid v1.3.0
-	github.com/hetznercloud/hcloud-go v1.46.1
+	github.com/hetznercloud/hcloud-go v1.47.0
 	github.com/lib/pq v1.10.9
 	github.com/rs/zerolog v1.29.1
 	github.com/sourcegraph/conc v0.3.0
@@ -30,10 +30,10 @@ require (
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/oriser/regroup v0.0.0-20210730155327-fca8d7531263 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.8 // indirect
-	github.com/prometheus/client_golang v1.15.1 // indirect
+	github.com/prometheus/client_golang v1.16.0 // indirect
 	github.com/prometheus/client_model v0.4.0 // indirect
 	github.com/prometheus/common v0.42.0 // indirect
-	github.com/prometheus/procfs v0.9.0 // indirect
+	github.com/prometheus/procfs v0.10.1 // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec // indirect
 	github.com/spf13/afero v1.9.5 // indirect
 	github.com/spf13/cast v1.5.1 // indirect

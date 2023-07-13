@@ -6,7 +6,7 @@ require (
 	github.com/alecthomas/kong v0.8.0
 	github.com/aleksasiriski/rffmpeg-go v1.2.1
 	github.com/google/uuid v1.3.0
-	github.com/hetznercloud/hcloud-go v1.47.0
+	github.com/hetznercloud/hcloud-go v1.48.0
 	github.com/lib/pq v1.10.9
 	github.com/rs/zerolog v1.29.1
 	github.com/sourcegraph/conc v0.3.0
@@ -41,9 +41,9 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/subosito/gotenv v1.4.2 // indirect
 	golang.org/x/mod v0.10.0 // indirect
-	golang.org/x/net v0.11.0 // indirect
-	golang.org/x/sys v0.9.0 // indirect
-	golang.org/x/text v0.10.0 // indirect
+	golang.org/x/net v0.12.0 // indirect
+	golang.org/x/sys v0.10.0 // indirect
+	golang.org/x/text v0.11.0 // indirect
 	golang.org/x/tools v0.8.0 // indirect
 	google.golang.org/protobuf v1.30.0 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect

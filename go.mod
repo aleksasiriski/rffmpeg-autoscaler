@@ -8,7 +8,7 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/hetznercloud/hcloud-go v1.48.0
 	github.com/lib/pq v1.10.9
-	github.com/rs/zerolog v1.29.1
+	github.com/rs/zerolog v1.30.0
 	github.com/sourcegraph/conc v0.3.0
 	github.com/spf13/viper v1.16.0
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1

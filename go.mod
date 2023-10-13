@@ -6,7 +6,7 @@ require (
 	github.com/alecthomas/kong v0.8.1
 	github.com/aleksasiriski/rffmpeg-go v1.2.1
 	github.com/google/uuid v1.3.1
-	github.com/hetznercloud/hcloud-go v1.51.0
+	github.com/hetznercloud/hcloud-go v1.52.0
 	github.com/lib/pq v1.10.9
 	github.com/rs/zerolog v1.31.0
 	github.com/sourcegraph/conc v0.3.0
